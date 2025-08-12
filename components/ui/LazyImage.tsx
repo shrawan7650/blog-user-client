@@ -65,8 +65,9 @@ export function LazyImage({
           className={`transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
           onLoad={handleLoad}
           onError={handleError}
-          priority={priority}
+        
           fill={!width && !height}
+            loading="lazy"
         />
       ) : (
         <Image
@@ -76,6 +77,7 @@ export function LazyImage({
           height={height}
           className="opacity-50"
           fill={!width && !height}
+          
         />
       )}
 

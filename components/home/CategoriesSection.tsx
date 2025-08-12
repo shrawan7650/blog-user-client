@@ -1,20 +1,28 @@
+// CategoriesSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchCategories } from "@/store/slices/categoriesSlice";
+// import type { RootState } from "@/store";
+import type { Category } from "@/types/blog";
+import { RootState } from "@/store/store";
 
 export function CategoriesSection() {
   const dispatch = useDispatch();
   const { items: categories, loading } = useSelector(
-    (state: any) => state.categories
+    (state: RootState) => state.categories
   );
+
   useEffect(() => {
-    dispatch(fetchCategories());
+    // This dispatch will only actually run if categories are not loaded,
+    // thanks to the `condition` option in fetchCategories thunk
+    dispatch(fetchCategories() as any); // Type assertion to bypass the type error
   }, [dispatch]);
+
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const scroll = (direction: "left" | "right") => {
@@ -23,7 +31,7 @@ export function CategoriesSection() {
       const scrollAmount = 200;
       const newPosition =
         direction === "left"
-          ? scrollPosition - scrollAmount
+          ? Math.max(0, scrollPosition - scrollAmount)
           : scrollPosition + scrollAmount;
 
       container.scrollTo({ left: newPosition, behavior: "smooth" });
@@ -56,14 +64,13 @@ export function CategoriesSection() {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {loading
-          ? 
-            Array.from({ length: 8 }).map((_, i) => (
+          ? Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 min-w-[200px] h-10  bg-muted animate-pulse rounded-lg"
+                className="flex-shrink-0 min-w-[200px] h-10 bg-muted animate-pulse rounded-lg"
               />
             ))
-          : categories.map((category) => (
+          : categories.map((category: Category) => (
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
@@ -71,7 +78,7 @@ export function CategoriesSection() {
               >
                 <div className="text-center">
                   <h3 className="font-semibold transition-colors group-hover:text-primary">
-                    {category?.name.charAt(0).toUpperCase() + category?.name.slice(1)}
+                    {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                   </h3>
                 </div>
               </Link>

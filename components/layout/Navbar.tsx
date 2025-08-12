@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Menu, X, Search, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu, X, Search, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store/hooks";
 import { openSearchModal } from "@/store/slices/uiSlice";
-import { categoriesService } from "@/services/categoriesService";
+
 import type { Category } from "@/types/blog";
 
 export function Navbar() {
@@ -17,17 +17,6 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await categoriesService.getCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const handleSearchClick = () => {
     dispatch(openSearchModal());

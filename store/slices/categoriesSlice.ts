@@ -1,23 +1,30 @@
-// src/store/categoriesSlice.ts
+// categoriesSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { categoriesService } from "@/services/categoriesService";
 import type { Category } from "@/types/blog";
+import { RootState } from "../store";
+
 
 export const fetchCategories = createAsyncThunk<
   Category[],
   void,
-  { state: any }
+  { state: RootState }
 >(
   "categories/fetchCategories",
-  async (_, { getState }) => {
-    const { categories } = getState();
-
-    // ✅ Agar state me pehle se data hai, Firebase/Service call skip karo
-    if (categories.items.length > 0) {
-      return categories.items;
-    }
-
+  async () => {
+    // Always fetch fresh categories (you can cache if you want)
     return await categoriesService.getCategories();
+  },
+  {
+    // This condition function prevents dispatch if already loaded
+    condition: (_, { getState }) => {
+      const { categories } = getState();
+      // If categories already loaded, skip thunk dispatch
+      if (categories.items.length > 0) {
+        return false;
+      }
+      return true;
+    },
   }
 );
 
@@ -37,6 +44,7 @@ const categoriesSlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
+        state.error = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;

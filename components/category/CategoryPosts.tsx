@@ -84,6 +84,8 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-200 group-hover:scale-105"
+                loading="lazy"
+                
               />
             </div>
 

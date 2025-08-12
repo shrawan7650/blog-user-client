@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { TrendingUp, Clock } from "lucide-react"
+import { TrendingUp, Clock, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { postsService } from "@/services/postsService"
 import type { BlogPostWithAuthor } from "@/types/blog"
@@ -12,7 +12,8 @@ export function TrendingPosts() {
   const [posts, setPosts] = useState<BlogPostWithAuthor[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
+  const [totalPages, setTotalPages] = useState(0)
+  const postsPerPage = 10
 
   useEffect(() => {
     fetchTrendingPosts()
@@ -21,24 +22,86 @@ export function TrendingPosts() {
   const fetchTrendingPosts = async () => {
     try {
       setLoading(true)
-      const { posts: newPosts, hasMore: moreAvailable } = await postsService.getTrendingPosts(currentPage, 6)
-
-      if (currentPage === 1) {
-        setPosts(newPosts)
-      } else {
-        setPosts((prev) => [...prev, ...newPosts])
+      const result = await postsService.getTrendingPosts(currentPage, postsPerPage)
+      
+      // Assuming your service returns { posts, totalPages } or { posts, hasMore }
+      // If it returns hasMore, you'll need to modify the service to return totalPages
+      setPosts(result.posts)
+      
+      // If your service returns totalPages:
+      if ('totalPages' in result) {
+        setTotalPages(result.totalPages)
+      } else if ('hasMore' in result) {
+        // Calculate total pages based on hasMore (this is a workaround)
+        // You should modify your service to return totalPages for better UX
+        setTotalPages(result.hasMore ? currentPage + 1 : currentPage)
       }
-
-      setHasMore(moreAvailable)
     } catch (error) {
       console.error("Error fetching trending posts:", error)
     } finally {
       setLoading(false)
     }
   }
-// console.log("posts",posts)
-  const loadMore = () => {
-    setCurrentPage((prev) => prev + 1)
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page)
+    }
+  }
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  // Generate page numbers with smart ellipsis
+  const generatePageNumbers = () => {
+    const pages = []
+    const showEllipsis = totalPages > 7
+
+    if (!showEllipsis) {
+      // Show all pages if total is 7 or less
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      // Always show first page
+      pages.push(1)
+
+      // Add ellipsis and pages around current page
+      if (currentPage > 3) {
+        pages.push('ellipsis1')
+      }
+
+      // Show pages around current page
+      const startPage = Math.max(2, currentPage - 1)
+      const endPage = Math.min(totalPages - 1, currentPage + 1)
+
+      for (let i = startPage; i <= endPage; i++) {
+        if (!pages.includes(i)) {
+          pages.push(i)
+        }
+      }
+
+      // Add ellipsis before last page if needed
+      if (currentPage < totalPages - 2) {
+        pages.push('ellipsis2')
+      }
+
+      // Always show last page
+      if (totalPages > 1) {
+        pages.push(totalPages)
+      }
+    }
+
+    return pages
   }
 
   if (loading && currentPage === 1) {
@@ -49,21 +112,30 @@ export function TrendingPosts() {
           <h2 className="text-2xl font-bold">Trending Posts</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="bg-card rounded-lg overflow-hidden shadow-sm animate-pulse">
+            <div key={index} className="overflow-hidden rounded-lg shadow-sm bg-card animate-pulse">
               <div className="h-48 bg-muted"></div>
               <div className="p-4 space-y-3">
-                <div className="h-4 bg-muted rounded w-3/4"></div>
-                <div className="h-3 bg-muted rounded w-full"></div>
-                <div className="h-3 bg-muted rounded w-2/3"></div>
+                <div className="w-3/4 h-4 rounded bg-muted"></div>
+                <div className="w-full h-3 rounded bg-muted"></div>
+                <div className="w-2/3 h-3 rounded bg-muted"></div>
                 <div className="flex space-x-4">
-                  <div className="h-3 bg-muted rounded w-16"></div>
-                  <div className="h-3 bg-muted rounded w-16"></div>
+                  <div className="w-16 h-3 rounded bg-muted"></div>
+                  <div className="w-16 h-3 rounded bg-muted"></div>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Pagination skeleton */}
+        <div className="flex items-center justify-center space-x-2">
+          <div className="w-20 h-8 rounded bg-muted animate-pulse"></div>
+          <div className="w-8 h-8 rounded bg-muted animate-pulse"></div>
+          <div className="w-8 h-8 rounded bg-muted animate-pulse"></div>
+          <div className="w-8 h-8 rounded bg-muted animate-pulse"></div>
+          <div className="w-20 h-8 rounded bg-muted animate-pulse"></div>
         </div>
       </div>
     )
@@ -71,61 +143,141 @@ export function TrendingPosts() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-2">
-        <TrendingUp className="w-6 h-6 text-primary" />
-        <h2 className="text-2xl font-bold">Trending Posts</h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <TrendingUp className="w-6 h-6 text-primary" />
+          <h2 className="text-2xl font-bold">Trending Posts</h2>
+        </div>
+        {totalPages > 1 && (
+          <div className="text-sm text-muted-foreground">
+            Page {currentPage} of {totalPages}
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
-            className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
-          >
-            <div className="relative h-48 overflow-hidden">
-              <Image
-                src={post.featuredImage || "/placeholder.svg"}
-                alt={post.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-200"
-              />
-            </div>
-
-            <div className="p-4">
-              <h3 className="font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                {post.title}
-              </h3>
-
-              <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{post.summary}</p>
-
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                <div className="relative w-4 h-4 overflow-hidden rounded-full">
-                    <Image
-                      src={post.author.avatar || "/placeholder.svg?height=16&width=16&query=user"}
-                      alt={post.author.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <span>{post.author.name}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-3 h-3" />
-                  <span>{post.readingTime}</span>
+      {loading ? (
+        // Loading state for page changes
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="overflow-hidden rounded-lg shadow-sm bg-card animate-pulse">
+              <div className="h-48 bg-muted"></div>
+              <div className="p-4 space-y-3">
+                <div className="w-3/4 h-4 rounded bg-muted"></div>
+                <div className="w-full h-3 rounded bg-muted"></div>
+                <div className="w-2/3 h-3 rounded bg-muted"></div>
+                <div className="flex space-x-4">
+                  <div className="w-16 h-3 rounded bg-muted"></div>
+                  <div className="w-16 h-3 rounded bg-muted"></div>
                 </div>
               </div>
             </div>
-          </Link>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="overflow-hidden transition-all duration-200 rounded-lg shadow-sm group bg-card hover:shadow-md"
+            >
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src={post.featuredImage || "/placeholder.svg"}
+                  alt={post.title}
+                  fill
+                  className="object-cover transition-transform duration-200 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
 
-      {hasMore && (
-        <div className="text-center">
-          <Button onClick={loadMore} disabled={loading} variant="outline">
-            {loading ? "Loading..." : "Load More"}
+              <div className="p-4">
+                <h3 className="mb-2 font-semibold transition-colors line-clamp-2 group-hover:text-primary">
+                  {post.title}
+                </h3>
+
+                <p className="mb-3 text-sm text-muted-foreground line-clamp-2">{post.summary}</p>
+
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center space-x-2">
+                    <div className="relative w-4 h-4 overflow-hidden rounded-full">
+                      <Image
+                        src={post.author.avatar || "/placeholder.svg?height=16&width=16&query=user"}
+                        alt={post.author.name}
+                        fill
+                        className="object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <span>{post.author.name}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-3 h-3" />
+                    <span>{post.readingTime}</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Pagination Navigation */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center space-x-2">
+          {/* Previous Page Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1 || loading}
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Previous
           </Button>
+
+          {/* Page Numbers */}
+          <div className="flex items-center space-x-1">
+            {generatePageNumbers().map((page, index) => {
+              if (page === 'ellipsis1' || page === 'ellipsis2') {
+                return (
+                  <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
+                    ...
+                  </span>
+                )
+              }
+
+              const pageNum = page as number
+              return (
+                <Button
+                  key={pageNum}
+                  variant={pageNum === currentPage ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => goToPage(pageNum)}
+                  disabled={loading}
+                >
+                  {pageNum}
+                </Button>
+              )
+            })}
+          </div>
+
+          {/* Next Page Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages || loading}
+          >
+            Next
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+      )}
+
+      {posts.length === 0 && !loading && (
+        <div className="py-12 text-center">
+          <p className="text-lg text-muted-foreground">No trending posts found.</p>
         </div>
       )}
     </div>

@@ -197,7 +197,7 @@ export const postsService = {
       }
     })
   },
-
+//done
   async getFeaturedPosts(): Promise<BlogPostWithAuthor[]> {
     const cacheKey = "featured_posts"
 
@@ -231,7 +231,7 @@ export const postsService = {
       }
     })
   },
-
+//done
   async getTrendingPosts(page = 1, pageSize = 6) {
     const cacheKey = getCacheKey("trending_posts", { page, pageSize })
 

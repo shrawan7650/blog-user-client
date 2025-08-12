@@ -32,7 +32,7 @@ export function HeroSection() {
     if (featuredPosts.length > 1) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % featuredPosts.length)
-      }, 10000) // Change every 10 seconds
+      }, 5000) // Change every 10 seconds
 
       return () => clearInterval(interval)
     }
@@ -58,8 +58,9 @@ export function HeroSection() {
   }
 
   const currentPost = featuredPosts[currentIndex]
+
   return (
-    <section className="relative h-[600px]  overflow-hidden">
+    <section className="relative h-[600px] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -67,7 +68,9 @@ export function HeroSection() {
           alt={currentPost.title}
           fill
           className="object-cover"
-          priority
+        
+          loading={currentIndex === 0 ? "eager" : "lazy"} // Lazy load others
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/50" />
       </div>
@@ -77,17 +80,21 @@ export function HeroSection() {
         <div className="max-w-2xl text-white">
           <div className="flex items-center mb-4 space-x-4">
             <span className="px-3 py-1 text-sm font-medium rounded-full bg-primary">Featured</span>
+
             <div className="flex items-center space-x-2 text-sm opacity-90">
-            <div className="relative w-6 h-6 overflow-hidden rounded-full">
+              <div className="relative w-6 h-6 overflow-hidden rounded-full">
                 <Image
                   src={currentPost.author.avatar || "/placeholder.svg?height=24&width=24&query=user"}
                   alt={currentPost.author.name}
                   fill
                   className="object-cover"
+                  loading="lazy" // Lazy load avatar
+                  sizes="24px"
                 />
               </div>
               <span>{currentPost.author.name}</span>
             </div>
+
             <div className="flex items-center space-x-2 text-sm opacity-90">
               <Clock className="w-4 h-4" />
               <span>{currentPost.readingTime}</span>
@@ -115,6 +122,9 @@ export function HeroSection() {
               key={index}
               className={`w-3 h-3 rounded-full transition-all ${index === currentIndex ? "bg-white" : "bg-white/50"}`}
               onClick={() => setCurrentIndex(index)}
+              aria-label={`Show featured post ${index + 1}`}
+              aria-pressed={index === currentIndex}
+              style={{ outline: "none" }}
             />
           ))}
         </div>

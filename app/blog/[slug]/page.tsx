@@ -9,7 +9,6 @@ import { NavigationButtons } from "@/components/blog/NavigationButtons"
 import { TagsSection } from "@/components/blog/TagsSection"
 import { LikeButton } from "@/components/blog/LikeButton"
 import { postsService } from "@/services/postsService"
-import type { BlogPost } from "@/types/blog"
 import type { BlogPostWithAuthor } from "@/types/blog"
 interface BlogPageProps {
   params: {

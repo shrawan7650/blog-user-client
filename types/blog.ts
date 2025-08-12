@@ -1,7 +1,7 @@
 export interface BlogPost {
   slug: string
   title: string
-  excerpt: string
+  summary: string
   category: string
   tags: string[]
   featuredImage: string
@@ -12,6 +12,8 @@ export interface BlogPost {
   views: number
   likes: number
   blocks: BlogContentBlock[]
+  updatedAt?: string // Optional, for tracking updates
+  
 }
 export interface User {
   uid: string

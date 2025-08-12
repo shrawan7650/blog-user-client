@@ -92,7 +92,7 @@ export function SearchModal() {
               placeholder="Search posts..."
               className="text-lg border-0 focus-visible:ring-0"
             />
-            <Button variant="ghost" size="sm" onClick={handleClose}>
+            <Button variant="ghost" size="sm" className="ml-5" onClick={handleClose}>
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -126,6 +126,7 @@ export function SearchModal() {
                         alt={post.title}
                         fill
                         className="object-cover"
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex-1 min-w-0">

@@ -14,9 +14,11 @@ interface NavigationButtonsProps {
 
 export function NavigationButtons({ currentSlug, category }: NavigationButtonsProps) {
   console.log("currentSlug", currentSlug)
-  console.log("category", category) 
+  console.log("category", category)
+
   const [prevPost, setPrevPost] = useState<BlogPost | null>(null)
   const [nextPost, setNextPost] = useState<BlogPost | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchNavigationPosts()
@@ -24,58 +26,110 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
 
   const fetchNavigationPosts = async () => {
     try {
+      setLoading(true)
       const { posts } = await postsService.getPosts(1, 100, category)
       const currentIndex = posts.findIndex((post) => post.slug === currentSlug)
 
-      if (currentIndex > 0) {
-        setPrevPost(posts[currentIndex - 1])
-      }
-
-      if (currentIndex < posts.length - 1) {
-        setNextPost(posts[currentIndex + 1])
-      }
+      setPrevPost(currentIndex > 0 ? posts[currentIndex - 1] : null)
+      setNextPost(currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null)
     } catch (error) {
       console.error("Error fetching navigation posts:", error)
+    } finally {
+      setLoading(false)
     }
   }
 
+  if (loading) {
+    return (
+      <div className="pt-8 mt-12 border-t">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+          {/* Previous button skeleton */}
+          <div className="flex-1">
+            <div className="h-16 rounded-lg bg-muted animate-pulse sm:max-w-xs"></div>
+          </div>
+          {/* Next button skeleton */}
+          <div className="flex-1 sm:flex sm:justify-end">
+            <div className="h-16 rounded-lg bg-muted animate-pulse sm:max-w-xs"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // If no navigation posts available
+  if (!prevPost && !nextPost) {
+    return null
+  }
+
   return (
-    <div className="flex flex-col items-center gap-4 pt-8 mt-12 border-t sm:flex-row sm:justify-between">
-    <div className="w-full sm:w-1/2">
-      {prevPost && (
-        <Button variant="outline" asChild className="w-full bg-transparent group sm:w-auto">
-          <Link href={`/blog/${prevPost.slug}`} className="flex items-center justify-center space-x-2 sm:justify-start">
-            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            <div className="max-w-full text-left">
-              <div className="text-xs text-muted-foreground">Previous</div>
-              <div className="max-w-full overflow-hidden font-medium line-clamp-1 text-ellipsis whitespace-nowrap">
-                {prevPost.title.slice(0, 20) || "No title available"}...
-              </div>
+    <div className="pt-8 mt-12 border-t">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
+        {/* Previous Post Button */}
+        <div className="flex-1 sm:max-w-xs">
+          {prevPost ? (
+            <Button 
+              variant="outline" 
+              asChild 
+              className="w-full h-auto p-4 bg-transparent border-dashed hover:bg-muted/50 group"
+            >
+              <Link href={`/blog/${prevPost.slug}`} className="flex items-start gap-3">
+                <ChevronLeft className="w-5 h-5 mt-1 transition-transform shrink-0 group-hover:-translate-x-1 text-muted-foreground" />
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
+                    Previous
+                  </div>
+                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors line-clamp-2 group-hover:text-primary">
+                    {prevPost.title}
+                  </div>
+                </div>
+              </Link>
+            </Button>
+          ) : (
+            <div className="w-full h-16 p-4 opacity-50">
+              <div className="text-xs text-muted-foreground">No previous post</div>
             </div>
-          </Link>
-        </Button>
-      )}
-    </div>
-  
-    <div className="w-full text-center sm:w-1/2 sm:text-right">
-      {nextPost && (
-        <Button variant="outline" asChild className="w-full bg-transparent group sm:w-auto">
-          <Link href={`/blog/${nextPost.slug}`} className="flex items-center justify-center space-x-2 sm:justify-end">
-            <div className="max-w-full text-right">
-              <div className="text-xs text-muted-foreground">Next</div>
-              <div className="max-w-full overflow-hidden font-medium line-clamp-1 text-ellipsis whitespace-nowrap">
-                {nextPost?.title.slice(0, 20) || "No title available"
-                
-                }...
-              </div>
+          )}
+        </div>
+
+        {/* Next Post Button */}
+        <div className="flex-1 sm:max-w-xs sm:flex sm:justify-end">
+          {nextPost ? (
+            <Button 
+              variant="outline" 
+              asChild 
+              className="w-full h-auto p-4 bg-transparent border-dashed hover:bg-muted/50 group sm:w-full"
+            >
+              <Link href={`/blog/${nextPost.slug}`} className="flex items-start gap-3">
+                <div className="flex-1 min-w-0 text-left sm:text-right">
+                  <div className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
+                    Next
+                  </div>
+                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors line-clamp-2 group-hover:text-primary">
+                    {nextPost.title}
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 mt-1 transition-transform shrink-0 group-hover:translate-x-1 text-muted-foreground" />
+              </Link>
+            </Button>
+          ) : (
+            <div className="w-full h-16 p-4 opacity-50 sm:text-right">
+              <div className="text-xs text-muted-foreground">No next post</div>
             </div>
-            <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </Button>
-      )}
+          )}
+        </div>
+      </div>
+
+      {/* Mobile-only: Show navigation dots/indicators */}
+      <div className="flex items-center justify-center mt-6 sm:hidden">
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full transition-colors ${prevPost ? 'bg-primary' : 'bg-muted'}`}></div>
+          <div className="w-2 h-2 rounded-full bg-primary"></div>
+          <div className={`w-2 h-2 rounded-full transition-colors ${nextPost ? 'bg-primary' : 'bg-muted'}`}></div>
+        </div>
+        <div className="ml-4 text-xs text-muted-foreground">
+          Navigate between posts
+        </div>
+      </div>
     </div>
-  </div>
-  
-  
   )
 }

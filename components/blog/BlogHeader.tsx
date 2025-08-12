@@ -26,7 +26,7 @@ export function BlogHeader({ post }: BlogHeaderProps) {
 
       {/* Feature Image */}
       <div className="relative h-[400px] overflow-hidden rounded-lg">
-        <Image src={post.featuredImage || "/placeholder.svg"} alt={post.title} fill className="object-cover" priority />
+        <Image src={post.featuredImage || "/placeholder.svg"}    loading="lazy"  alt={post.title} fill className="object-cover"  />
       </div>
 
       {/* Title and Meta */}
@@ -46,6 +46,7 @@ export function BlogHeader({ post }: BlogHeaderProps) {
               alt={author.name}
               fill
               className="object-cover"
+              loading="lazy"
             />
           </div>
 
