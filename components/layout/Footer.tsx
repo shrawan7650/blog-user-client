@@ -243,18 +243,25 @@ const col2 = categories.slice(6);
 
 
 function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-  const result = []
+  const result: T[][] = []
   for (let i = 0; i < array.length; i += chunkSize) {
     result.push(array.slice(i, i + chunkSize))
   }
   return result
 }
 
- function FooterCategories({ categories }: { categories: any[] }) {
+export default function FooterCategories({ categories }: { categories: any[] }) {
   const columns = chunkArray(categories, 6) // 6 items per column
+  const columnCount = Math.min(columns.length, 4) // max 4 columns for readability
 
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-${columns.length} gap-x-8 gap-y-2`}>
+    <div
+      className={`grid gap-x-8 gap-y-4  
+        grid-cols-3
+        sm:grid-cols-2
+        md:grid-cols-${Math.min(columnCount, 3)}
+        lg:grid-cols-${columnCount}`}
+    >
       {columns.map((col, colIndex) => (
         <ul key={colIndex} className="space-y-2">
           {col.map((category) => (
