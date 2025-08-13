@@ -27,7 +27,7 @@ export function BlogHeader({ post }: BlogHeaderProps) {
   const { author } = post;
   const dispatch = useAppDispatch();
   const router = useRouter();
-  console.log("post", post);
+
   useEffect(() => {
     // Fetch categories when the component mounts
     dispatch(fetchCategories());

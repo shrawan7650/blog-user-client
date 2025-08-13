@@ -48,7 +48,7 @@ export function Sidebar() {
       setIsSubscribing(false)
     }
   }
-console.log("popularPosts", popularPosts)
+
   return (
     <div className="space-y-8">
       {/* Newsletter Signup */}

@@ -13,8 +13,6 @@ interface NavigationButtonsProps {
 }
 
 export function NavigationButtons({ currentSlug, category }: NavigationButtonsProps) {
-  console.log("currentSlug", currentSlug)
-  console.log("category", category)
 
   const [prevPost, setPrevPost] = useState<BlogPost | null>(null)
   const [nextPost, setNextPost] = useState<BlogPost | null>(null)

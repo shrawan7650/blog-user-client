@@ -17,14 +17,15 @@ export function BlogContent({ blocks }: BlogContentProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [expandedFAQs, setExpandedFAQs] = useState<Set<number>>(new Set())
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
-     console.log("blocks", blocks)
+   
   const copyToClipboard = async (code: string, blockId: string) => {
     try {
       await navigator.clipboard.writeText(code)
       setCopiedCode(blockId)
       setTimeout(() => setCopiedCode(null), 2000)
     } catch (error) {
-      console.error("Failed to copy code:", error)
+      
+     
     }
   }
 
@@ -411,7 +412,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
         
 
       default:
-        console.warn(`Unknown block type: ${block.type}`, block)
+       
         return (
           <div key={block.id || index} className="p-4 mb-6 border border-yellow-200 rounded bg-yellow-50">
             <p className="text-yellow-800">Unknown block type: {block.type}</p>
