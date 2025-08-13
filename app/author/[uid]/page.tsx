@@ -222,59 +222,64 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
               </p>
             )}
 
-            {/* Social Links */}
-            {Object.keys(author.socialLinks).length > 0 && (
-              <div className="flex items-center space-x-3">
-                {author.socialLinks.github && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={author.socialLinks.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github className="w-4 h-4 mr-2" />
-                      GitHub
-                    </a>
-                  </Button>
-                )}
-                {author.socialLinks.linkedin && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={author.socialLinks.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Linkedin className="w-4 h-4 mr-2" />
-                      LinkedIn
-                    </a>
-                  </Button>
-                )}
-                {author.socialLinks.twitter && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={author.socialLinks.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Twitter className="w-4 h-4 mr-2" />
-                      Twitter
-                    </a>
-                  </Button>
-                )}
-                {author.socialLinks.website && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={author.socialLinks.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Globe className="w-4 h-4 mr-2" />
-                      Website
-                    </a>
-                  </Button>
-                )}
-              </div>
-            )}
+      {/* Social Links */}
+{Object.keys(author.socialLinks || {}).length > 0 && (
+  <div className="flex flex-wrap gap-2 mt-4">
+    {author.socialLinks.github && (
+      <Button variant="outline" size="sm" asChild>
+        <a
+          href={author.socialLinks.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center"
+        >
+          <Github className="w-4 h-4 mr-1" />
+          GitHub
+        </a>
+      </Button>
+    )}
+    {author.socialLinks.linkedin && (
+      <Button variant="outline" size="sm" asChild>
+        <a
+          href={author.socialLinks.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center"
+        >
+          <Linkedin className="w-4 h-4 mr-1" />
+          LinkedIn
+        </a>
+      </Button>
+    )}
+    {author.socialLinks.twitter && (
+      <Button variant="outline" size="sm" asChild>
+        <a
+          href={author.socialLinks.twitter}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center"
+        >
+          <Twitter className="w-4 h-4 mr-1" />
+          Twitter
+        </a>
+      </Button>
+    )}
+    {author.socialLinks.website && (
+      <Button variant="outline" size="sm" asChild>
+        <a
+          href={author.socialLinks.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center"
+        >
+          <Globe className="w-4 h-4 mr-1" />
+          Website
+        </a>
+      </Button>
+    )}
+  </div>
+)}
+
           </div>
         </div>
       </div>
@@ -282,16 +287,16 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
       {/* Author's Posts */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">
+          <h2 className="font-bold sm:text-2xl">
             {currentPage > 1
-              ? `Posts by ${author.name} - Page ${currentPage}`
+              ? `Posts by ${author.name}`
               : `Latest Posts by ${author.name}`}
           </h2>
-          {totalPages > 1 && (
+          {/* {totalPages > 1 && (
             <div className="text-sm text-muted-foreground">
               Page {currentPage} of {totalPages}
             </div>
-          )}
+          )} */}
         </div>
 
         {posts.length > 0 ? (
@@ -319,7 +324,7 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
                     </h3>
 
                     <p className="mb-4 text-muted-foreground line-clamp-3">
-                      {post.summary}
+                      {post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between text-sm text-muted-foreground">

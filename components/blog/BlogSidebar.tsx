@@ -11,7 +11,7 @@ export function BlogSidebar() {
 <div className="space-y-8">
   {/* Sticky Ad */}
   <div>
-    <AdSlot slot="blog-sidebar" format="vertical" />
+    <AdSlot slot="blog-sidebar" format="horizontal" />
   </div>
 
   {/* Categories List */}
@@ -31,7 +31,7 @@ export function BlogSidebar() {
           ))}
         </div>
       ) : (
-        categories.map((category) => (
+        categories.map((category:any) => (
           <Link
             key={category.id}
             href={`/category/${category.slug}`}

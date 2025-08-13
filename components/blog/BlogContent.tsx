@@ -17,7 +17,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [expandedFAQs, setExpandedFAQs] = useState<Set<number>>(new Set())
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
-
+     console.log("blocks", blocks)
   const copyToClipboard = async (code: string, blockId: string) => {
     try {
       await navigator.clipboard.writeText(code)
@@ -387,13 +387,28 @@ export function BlogContent({ blocks }: BlogContentProps) {
           </div>
         )
 
-      case "divider":
-        return (
-          <div key={block.id || index} className="mb-6">
-            <hr className="border-border" />
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
-          </div>
-        )
+        case "divider": {
+          const styleMap = {
+            solid: "border-solid",
+            dashed: "border-dashed",
+            dotted: "border-dotted",
+            double: "border-double",
+          };
+        
+          return (
+            <div key={block.id || index} className="mb-6">
+              <hr
+                className={`border-border ${
+                  styleMap[block.data?.style] || "border-solid"
+                } border-t-2`}
+              />
+              {shouldShowAd && (
+                <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+              )}
+            </div>
+          );
+        }
+        
 
       default:
         console.warn(`Unknown block type: ${block.type}`, block)

@@ -1,4 +1,3 @@
-
 import { configureStore } from "@reduxjs/toolkit"
 import postsSlice from "./slices/postsSlice"
 import uiSlice from "./slices/uiSlice"
@@ -8,10 +7,14 @@ import categoriesReducer from "./slices/categoriesSlice"
 export const store = configureStore({
   reducer: {
     posts: postsSlice,
-    categories:categoriesReducer,
+    categories: categoriesReducer,
     ui: uiSlice,
     blog: blogSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })
 
 export type RootState = ReturnType<typeof store.getState>

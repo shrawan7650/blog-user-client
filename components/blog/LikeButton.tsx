@@ -50,7 +50,7 @@ export function LikeButton({ postSlug, initialLikes }: LikeButtonProps) {
       size="sm"
       onClick={handleLike}
       disabled={isLoading}
-      className="flex items-center space-x-2"
+      className="flex items-center mt-2 mb-2 space-x-2"
     >
       <ThumbsUp className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
       <span>{currentLikes}</span>

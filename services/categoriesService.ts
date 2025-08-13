@@ -16,10 +16,17 @@ export const categoriesService = {
     try {
       const q = query(collection(db, "categories"), orderBy("name"))
       const snapshot = await getDocs(q)
-      const categories = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Category[]
+  
+      const categories = snapshot.docs.map((doc) => {
+        const data = doc.data()
+      
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.().toISOString() || null, // ✅ convert to string
+        }
+      }) as Category[]
+      
 
       // Update cache
       categoriesCache = {

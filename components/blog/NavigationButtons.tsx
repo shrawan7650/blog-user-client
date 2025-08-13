@@ -41,7 +41,7 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
 
   if (loading) {
     return (
-      <div className="pt-8 mt-12 border-t">
+      <div className="border-t ">
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
           {/* Previous button skeleton */}
           <div className="flex-1">

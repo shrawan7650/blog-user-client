@@ -15,6 +15,7 @@ import {
 import { db } from "@/lib/firebase"
 import { usersService } from "./usersService"
 import type { BlogPost ,BlogPostWithAuthor} from "@/types/blog"
+import { serializeData } from "@/utils/serializeData"
 
 // In-memory cache
 const cache = new Map<string, { data: any; timestamp: number; ttl: number }>()
@@ -189,7 +190,8 @@ export const postsService = {
             totalPosts: 0,
           },
         }
-          setCache(cacheKey, post, LONG_CACHE_TTL) // Cache posts longer
+        const serializedPost = serializeData(post);
+          setCache(cacheKey, serializedPost, LONG_CACHE_TTL) // Cache posts longer
           return post
       } catch (error) {
         console.error("Error fetching post:", error)

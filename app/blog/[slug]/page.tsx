@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
     return {
       title: post.title,
-      description: post.summary,
+      description: post.excerpt || post.summary,
       keywords: post.tags.join(", "),
       authors: [{ name: post.author }],
       openGraph: {
         title: post.title,
-        description: post.summary,
+        description: post.excerpt,
         type: "article",
         publishedTime: post.createdAt,
         authors: [post.author.name],
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
       twitter: {
         card: "summary_large_image",
         title: post.title,
-        description: post.summary,
+        description: post.excerpt,
         images: [post.featuredImage],
       },
     }
@@ -81,7 +81,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    description: post.summary,
+    description: post.excerpt,
     image: post.featuredImage,
     author: {
       "@type": "Person",
@@ -113,13 +113,17 @@ export default async function BlogPage({ params }: BlogPageProps) {
             <div className="lg:col-span-3">
               <BlogHeader post={post} />
      {/* {console.log("post.category",post.category)} */}
-             <div className="flex items-center justify-between my-6">
+             <div className="flex items-center justify-between my-6 mb-2 border-b ">
                 <ShareButtons post={post} />
                 <LikeButton postSlug={post.slug} initialLikes={post.likes} />
               </div> 
 
               <BlogContent blocks={post.content} />
 
+             <div className="flex items-center justify-between my-6 mb-2 border-t border-b">
+                <ShareButtons post={post} />
+                <LikeButton postSlug={post.slug} initialLikes={post.likes} />
+              </div> 
               <TagsSection tags={post.tags} /> 
 
               <NavigationButtons currentSlug={post.slug} category={post.category} />
