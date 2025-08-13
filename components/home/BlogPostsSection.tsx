@@ -38,7 +38,7 @@ export function BlogPostsSection() {
         selectedCategory === "all" ? undefined : selectedCategory
       );
   
-      console.log("Fetched posts:", newPosts);
+
       // ✅ Date ko string me convert
       const cleanedPosts = newPosts.map(post => ({
         ...post,

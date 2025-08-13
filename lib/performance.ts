@@ -123,9 +123,6 @@ export const analyzeBundleSize = () => {
   const scripts = Array.from(document.querySelectorAll("script[src]"))
   const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
 
-  console.group("Bundle Analysis")
-  console.log("Scripts:", scripts.length)
-  console.log("Stylesheets:", styles.length)
 
   // Estimate bundle size (rough approximation)
   let totalSize = 0
@@ -136,7 +133,7 @@ export const analyzeBundleSize = () => {
     }
   })
 
-  console.log(`Estimated bundle size: ~${totalSize}KB`)
+
   console.groupEnd()
 }
 

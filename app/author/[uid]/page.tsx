@@ -160,10 +160,10 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
 
   try {
     author = await usersService.getUserById(params.uid);
-    console.log("author", author);
+   
 
     if (author) {
-      console.log("post.........");
+    
       const result = await postsService.getPostsByAuthor(
         params.uid,
         currentPage,
@@ -173,11 +173,10 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
       totalPages = result.totalPages;
     }
   } catch (error) {
-    console.error("Error fetching author data:", error);
+    console.error("Error fetching author or posts:", error);
+    notFound();
   }
 
-  console.log("posts", posts);
-  console.log("totalPages", totalPages);
 
   if (!author) {
     notFound();

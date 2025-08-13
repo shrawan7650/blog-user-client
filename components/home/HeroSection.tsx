@@ -60,75 +60,87 @@ export function HeroSection() {
   const currentPost = featuredPosts[currentIndex]
 
   return (
-    <section className="relative h-[600px] overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src={currentPost.featuredImage || "/placeholder.svg"}
-          alt={currentPost.title}
-          fill
-          className="object-cover"
-        
-          loading={currentIndex === 0 ? "eager" : "lazy"} // Lazy load others
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
+<section className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden">
+  {/* Background Image */}
+  <div className="absolute inset-0">
+    <Image
+      src={currentPost.featuredImage || "/placeholder.svg"}
+      alt={currentPost.title}
+      fill
+      className="object-cover"
+      loading={currentIndex === 0 ? "eager" : "lazy"}
+      sizes="100vw"
+    />
+    <div className="absolute inset-0 bg-black/50" />
+  </div>
 
-      {/* Content */}
-      <div className="container relative z-10 flex items-center h-full px-4 mx-auto">
-        <div className="max-w-2xl text-white">
-          <div className="flex items-center mb-4 space-x-4">
-            <span className="px-3 py-1 text-sm font-medium rounded-full bg-primary">Featured</span>
+  {/* Content */}
+  <div className="container relative z-10 flex items-center h-full px-4 mx-auto">
+    <div className="max-w-xl text-white sm:max-w-2xl">
+      {/* Tags / Author / Reading time */}
+      <div className="flex flex-wrap items-center mb-3 space-x-2 sm:space-x-4">
+        <span className="px-2 py-1 text-xs font-medium rounded-full sm:text-sm bg-primary">
+          Featured
+        </span>
 
-            <div className="flex items-center space-x-2 text-sm opacity-90">
-              <div className="relative w-6 h-6 overflow-hidden rounded-full">
-                <Image
-                  src={currentPost.author.avatar || "/placeholder.svg?height=24&width=24&query=user"}
-                  alt={currentPost.author.name}
-                  fill
-                  className="object-cover"
-                  loading="lazy" // Lazy load avatar
-                  sizes="24px"
-                />
-              </div>
-              <span>{currentPost.author.name}</span>
-            </div>
-
-            <div className="flex items-center space-x-2 text-sm opacity-90">
-              <Clock className="w-4 h-4" />
-              <span>{currentPost.readingTime}</span>
-            </div>
-          </div>
-
-          <h1 className="mb-4 text-4xl font-bold leading-tight md:text-5xl">{currentPost.title}</h1>
-
-          <p className="mb-6 text-lg opacity-90 line-clamp-3">{currentPost.summary}</p>
-
-          <Button asChild size="lg" className="group">
-            <Link href={`/blog/${currentPost.slug}`}>
-              Read More
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Indicators */}
-      {featuredPosts.length > 1 && (
-        <div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-6 left-1/2">
-          {featuredPosts.map((_, index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-all ${index === currentIndex ? "bg-white" : "bg-white/50"}`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Show featured post ${index + 1}`}
-              aria-pressed={index === currentIndex}
-              style={{ outline: "none" }}
+        <div className="flex items-center space-x-2 text-xs sm:text-sm opacity-90">
+          <div className="relative w-5 h-5 overflow-hidden rounded-full sm:w-6 sm:h-6">
+            <Image
+              src={currentPost.author.avatar || "/placeholder.svg?height=24&width=24&query=user"}
+              alt={currentPost.author.name}
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="24px"
             />
-          ))}
+          </div>
+          <span>By:{currentPost.author.name}</span>
         </div>
-      )}
-    </section>
+
+        <div className="flex items-center space-x-1 text-xs sm:space-x-2 sm:text-sm opacity-90">
+          <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+          <span>{currentPost.readingTime}</span>
+        </div>
+      </div>
+
+      {/* Title */}
+      <h1 className="mb-2 text-2xl font-bold leading-tight sm:mb-4 sm:text-4xl md:text-5xl">
+        {currentPost.title}
+      </h1>
+
+      {/* Summary */}
+      <p className="mb-4 text-sm opacity-90 line-clamp-2 sm:mb-6 sm:text-lg sm:line-clamp-3">
+        {currentPost.summary}
+      </p>
+
+      {/* Button */}
+      <Button asChild size="sm" className="group sm:size-lg">
+        <Link href={`/blog/${currentPost.slug}`}>
+          Read More
+          <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+        </Link>
+      </Button>
+    </div>
+  </div>
+
+  {/* Indicators */}
+  {featuredPosts.length > 1 && (
+    <div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-4 sm:bottom-6 left-1/2">
+      {featuredPosts.map((_, index) => (
+        <button
+          key={index}
+          className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${
+            index === currentIndex ? "bg-white" : "bg-white/50"
+          }`}
+          onClick={() => setCurrentIndex(index)}
+          aria-label={`Show featured post ${index + 1}`}
+          aria-pressed={index === currentIndex}
+          style={{ outline: "none" }}
+        />
+      ))}
+    </div>
+  )}
+</section>
+
   )
 }

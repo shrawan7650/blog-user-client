@@ -17,7 +17,7 @@ export function AdSlot({ slot, format = "horizontal", className = "" }: AdSlotPr
         // @ts-ignore
         ;(window.adsbygoogle = window.adsbygoogle || []).push({})
       } catch (error) {
-        console.error("AdSense error:", error)
+    
       }
     }
   }, [])
