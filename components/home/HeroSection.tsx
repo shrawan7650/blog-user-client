@@ -38,7 +38,7 @@ export function HeroSection() {
     }
   }, [featuredPosts.length])
 
-  if (loading) {
+  if (loading && featuredPosts.length === 0) {
     return (
       <section className="relative h-[600px] bg-muted animate-pulse">
         <div className="container flex items-center h-full px-4 mx-auto">
@@ -54,8 +54,20 @@ export function HeroSection() {
   }
 
   if (featuredPosts.length === 0) {
-    return null
+    return (
+      <section className="relative h-[600px] bg-muted animate-pulse">
+        <div className="container flex items-center h-full px-4 mx-auto">
+          <div className="w-full max-w-2xl space-y-4">
+            <div className="w-3/4 h-8 rounded bg-muted-foreground/20"></div>
+            <div className="w-full h-4 rounded bg-muted-foreground/20"></div>
+            <div className="w-2/3 h-4 rounded bg-muted-foreground/20"></div>
+            <div className="w-32 h-10 rounded bg-muted-foreground/20"></div>
+          </div>
+        </div>
+      </section>
+    )
   }
+  
 
   const currentPost = featuredPosts[currentIndex]
 
@@ -64,8 +76,8 @@ export function HeroSection() {
   {/* Background Image */}
   <div className="absolute inset-0">
     <Image
-      src={currentPost.featuredImage || "/placeholder.svg"}
-      alt={currentPost.title}
+      src={currentPost?.featuredImage}
+      alt={currentPost?.title}
       fill
       className="object-cover"
       loading={currentIndex === 0 ? "eager" : "lazy"}
@@ -86,36 +98,36 @@ export function HeroSection() {
         <div className="flex items-center space-x-2 text-xs sm:text-sm opacity-90">
           <div className="relative w-5 h-5 overflow-hidden rounded-full sm:w-6 sm:h-6">
             <Image
-              src={currentPost.author.avatar || "/placeholder.svg?height=24&width=24&query=user"}
-              alt={currentPost.author.name}
+              src={currentPost?.author?.avatar}
+              alt={currentPost?.author?.name}
               fill
               className="object-cover"
               loading="lazy"
               sizes="24px"
             />
           </div>
-          <span>By:{currentPost.author.name}</span>
+          <span>By:{currentPost?.author.name}</span>
         </div>
 
         <div className="flex items-center space-x-1 text-xs sm:space-x-2 sm:text-sm opacity-90">
           <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span>{currentPost.readingTime}</span>
+          <span>{currentPost?.readingTime}</span>
         </div>
       </div>
 
       {/* Title */}
       <h1 className="mb-2 text-2xl font-bold leading-tight sm:mb-4 sm:text-4xl md:text-5xl">
-        {currentPost.title}
+        {currentPost?.title}
       </h1>
 
       {/* Summary */}
-      <p className="mb-4 text-sm opacity-90 line-clamp-2 sm:mb-6 sm:text-lg sm:line-clamp-3">
-        {currentPost.summary}
+      <p className="mb-4 text-sm opacity-90 line-clamp-2 sm:mb-6 sm:text-lg sm:line-clamp-2">
+        {currentPost?.excerpt}
       </p>
 
       {/* Button */}
       <Button asChild size="sm" className="group sm:size-lg">
-        <Link href={`/blog/${currentPost.slug}`}>
+        <Link href={`/blog/${currentPost?.slug}`}>
           Read More
           <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
         </Link>

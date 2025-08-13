@@ -76,8 +76,8 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
                   <div className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
                     Previous
                   </div>
-                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors line-clamp-2 group-hover:text-primary">
-                    {prevPost.title}
+                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors group-hover:text-primary">
+                    {prevPost.title.slice(0,40)}...
                   </div>
                 </div>
               </Link>
@@ -102,8 +102,8 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
                   <div className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
                     Next
                   </div>
-                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors line-clamp-2 group-hover:text-primary">
-                    {nextPost.title}
+                  <div className="mt-1 text-sm font-semibold leading-tight transition-colors group-hover:text-primary">
+                    {nextPost.title.slice(0,40)}...
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 mt-1 transition-transform shrink-0 group-hover:translate-x-1 text-muted-foreground" />

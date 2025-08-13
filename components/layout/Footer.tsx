@@ -75,8 +75,11 @@ export function Footer() {
   const dispatch = useDispatch()
   useEffect(() => {
     // Fetch categories when the component mounts
-    dispatch(fetchCategories());
+    dispatch(fetchCategories() as any);
   }, [dispatch]);
+  const col1 = categories.slice(0, 6);
+const col2 = categories.slice(6);
+
   return (
     <footer className="text-white bg-gray-900">
       <div className="container px-4 py-8 mx-auto sm:px-6 lg:px-8 sm:py-12">
@@ -153,31 +156,7 @@ export function Footer() {
                 ))}
               </div>
             ) : (
-              <ul className="space-y-2">
-                {categories.slice(0, 6).map((category) => (
-                  <li key={category.id}>
-                    <Link 
-                      href={`/category/${category.slug}`}
-                      className="inline-block text-sm text-gray-400 transition-colors duration-200 transform hover:text-white hover:translate-x-1 sm:text-base"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-                
-                {/* View All Link - only show if more than 6 categories */}
-                {/* {categories.length > 6 && (
-                  <li className="pt-2">
-                    <Link
-                      href="/categories"
-                      className="inline-flex items-center text-sm font-medium text-blue-400 hover:text-blue-300 hover:underline group"
-                    >
-                      View All Categories
-                      <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
-                    </Link>
-                  </li>
-                )} */}
-              </ul>
+          <FooterCategories categories={categories} />
             )}
           </div>
 
@@ -258,5 +237,38 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  )
+}
+
+
+
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const result = []
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize))
+  }
+  return result
+}
+
+ function FooterCategories({ categories }: { categories: any[] }) {
+  const columns = chunkArray(categories, 6) // 6 items per column
+
+  return (
+    <div className={`grid grid-cols-1 sm:grid-cols-${columns.length} gap-x-8 gap-y-2`}>
+      {columns.map((col, colIndex) => (
+        <ul key={colIndex} className="space-y-2">
+          {col.map((category) => (
+            <li key={category.id}>
+              <Link
+                href={`/category/${category.slug}`}
+                className="inline-block text-sm text-gray-400 transition-all duration-200 sm:text-base hover:text-white hover:translate-x-1"
+              >
+                {category.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
   )
 }

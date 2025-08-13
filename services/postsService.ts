@@ -92,60 +92,75 @@ const attachAuthorsToPosts = async (posts: BlogPost[]): Promise<BlogPostWithAuth
 export const postsService = {
   async getPosts(page = 1, pageSize = 10, categoryId?: string) {
     const cacheKey = getCacheKey("posts", { page, pageSize, categoryId })
-
+  
     // Check cache first
     const cached = getCache(cacheKey)
     if (cached) {
       return cached
     }
-
-    // Deduplicate requests
+  
     return deduplicate(cacheKey, async () => {
       try {
-        let q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(pageSize))
-
+        // Base query: only published posts
+        let q = query(
+          collection(db, "posts"),
+          where("status", "==", "published"),
+          orderBy("createdAt", "desc"),
+          limit(pageSize)
+        )
+  
+        // Filter by category if provided
         if (categoryId) {
           q = query(
             collection(db, "posts"),
+            where("status", "==", "published"),
             where("category", "==", categoryId),
             orderBy("createdAt", "desc"),
-            limit(pageSize),
+            limit(pageSize)
           )
         }
-
+  
+        // Pagination
         if (page > 1) {
           const previousQuery = query(
             collection(db, "posts"),
+            where("status", "==", "published"),
             orderBy("createdAt", "desc"),
-            limit((page - 1) * pageSize),
+            limit((page - 1) * pageSize)
           )
           const previousSnapshot = await getDocs(previousQuery)
           const lastDoc = previousSnapshot.docs[previousSnapshot.docs.length - 1]
           q = query(q, startAfter(lastDoc))
         }
-
+  
+        // Fetch data
         const snapshot = await getDocs(q)
         const posts = snapshot.docs.map((doc) => ({
           ...doc.data(),
           slug: doc.data().slug,
         })) as BlogPost[]
-
+  
         const postsWithAuthors = await attachAuthorsToPosts(posts)
-
-        // Get total count for pagination (cached separately)
+  
+        // Get total count (only published)
         const totalCacheKey = getCacheKey("posts_total", { categoryId })
         let totalPages = getCache(totalCacheKey)
-
+  
         if (!totalPages) {
           const totalQuery = categoryId
-            ? query(collection(db, "posts"), where("category", "==", categoryId))
-            : query(collection(db, "posts"))
+            ? query(
+                collection(db, "posts"),
+                where("status", "==", "published"),
+                where("category", "==", categoryId)
+              )
+            : query(collection(db, "posts"), where("status", "==", "published"))
+  
           const totalSnapshot = await getDocs(totalQuery)
           totalPages = Math.ceil(totalSnapshot.size / pageSize)
           setCache(totalCacheKey, totalPages, LONG_CACHE_TTL)
         }
-
-        const result = { posts:postsWithAuthors, totalPages }
+  
+        const result = { posts: postsWithAuthors, totalPages }
         setCache(cacheKey, result)
         return result
       } catch (error) {
@@ -154,6 +169,7 @@ export const postsService = {
       }
     })
   },
+  
 
   async getPostBySlug(slug: string): Promise<BlogPostWithAuthor | null> {
     const cacheKey = getCacheKey("post", { slug })
@@ -166,7 +182,14 @@ export const postsService = {
 
     return deduplicate(cacheKey, async () => {
       try {
-        const q = query(collection(db, "posts"), where("slug", "==", slug), limit(1))
+        const q = query(
+          collection(db, "posts"),
+          where("slug", "==", slug),
+          where("status", "==", "published"),
+          limit(1)
+        )
+  
+        
         const snapshot = await getDocs(q)
 
         if (snapshot.empty) {
@@ -212,10 +235,12 @@ export const postsService = {
       try {
         const q = query(
           collection(db, "posts"),
+          where("status", "==", "published"),
           where("isFeatured", "==", true),
           orderBy("createdAt", "desc"),
-          limit(5),
+          limit(5)
         )
+  
 
         const snapshot = await getDocs(q)
         const posts = snapshot.docs.map((doc) => ({
@@ -244,7 +269,12 @@ export const postsService = {
 
     return deduplicate(cacheKey, async () => {
       try {
-        let q = query(collection(db, "posts"), orderBy("views", "desc"), limit(pageSize))
+        let q = query(
+          collection(db, "posts"),
+          where("status", "==", "published"),
+          orderBy("views", "desc"),
+          limit(pageSize)
+        )
 
         if (page > 1) {
           const previousQuery = query(collection(db, "posts"), orderBy("views", "desc"), limit((page - 1) * pageSize))
@@ -283,7 +313,12 @@ export const postsService = {
 
     return deduplicate(cacheKey, async () => {
       try {
-        const q = query(collection(db, "posts"), orderBy("views", "desc"), limit(limitCount))
+        const q = query(
+          collection(db, "posts"),
+          where("status", "==", "published"),
+          orderBy("views", "desc"),
+          limit(limitCount)
+        )
 
         const snapshot = await getDocs(q)
         const posts = snapshot.docs.map((doc) => ({
@@ -355,6 +390,7 @@ export const postsService = {
           collection(db, "posts"),
           where("createdBy", "==", authorId),
           orderBy("createdAt", "desc"),
+          where("status", "==", "published"),
           limit(pageSize),
         )
 
@@ -363,6 +399,7 @@ export const postsService = {
             collection(db, "posts"),
             where("createdBy", "==", authorId),
             orderBy("createdAt", "desc"),
+            where("status", "==", "published"),
             limit((page - 1) * pageSize),
           )
           const previousSnapshot = await getDocs(previousQuery)
@@ -405,7 +442,8 @@ export const postsService = {
 
     try {
   // Find document by slug
-  const q = query(collection(db, "posts"), where("slug", "==", slug), limit(1))
+  const q = query(collection(db, "posts"), where("slug", "==", slug), limit(1)
+  )
   const snapshot = await getDocs(q)
 
   if (!snapshot.empty) {

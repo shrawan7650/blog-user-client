@@ -14,7 +14,7 @@ export function TrendingPosts() {
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
-  const postsPerPage = 10
+  const postsPerPage = 12
 
   useEffect(() => {
     fetchTrendingPosts()
@@ -105,7 +105,7 @@ export function TrendingPosts() {
     return pages
   }
 
-  if (loading && currentPage === 1) {
+  if (loading && posts.length === 0) {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-2">
@@ -156,7 +156,7 @@ export function TrendingPosts() {
         )}
       </div>
 
-      {loading ? (
+      {posts.length===0 ? (
         // Loading state for page changes
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
@@ -245,11 +245,11 @@ export function TrendingPosts() {
         </div>
       )}
 
-      {posts.length === 0 && !loading && (
+      {/* {posts.length === 0 && !loading && (
         <div className="py-12 text-center">
           <p className="text-lg text-muted-foreground">No trending posts found.</p>
         </div>
-      )}
+      )} */}
     </div>
   )
 }
