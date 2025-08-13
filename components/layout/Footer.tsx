@@ -1,7 +1,9 @@
 'use client'
 import Link from "next/link"
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react"
-import { useSelector } from "react-redux"
+import { useSelector,useDispatch } from "react-redux"
+import { fetchCategories } from "@/store/slices/categoriesSlice"
+import { useEffect } from "react"
 
 // Constant data arrays
 const SOCIAL_LINKS = [
@@ -70,7 +72,11 @@ const COMPANY_INFO = {
 
 export function Footer() {
   const { items: categories = [], loading } = useSelector((state: any) => state.categories)
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    // Fetch categories when the component mounts
+    dispatch(fetchCategories());
+  }, [dispatch]);
   return (
     <footer className="text-white bg-gray-900">
       <div className="container px-4 py-8 mx-auto sm:px-6 lg:px-8 sm:py-12">

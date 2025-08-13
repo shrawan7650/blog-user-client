@@ -47,7 +47,7 @@ export function BlogPostsSection() {
       }));
       
   
-      // dispatch(setPosts(cleanedPosts));
+      dispatch(setPosts(cleanedPosts));
       setTotalPages(total);
   
     } catch (error) {
@@ -100,14 +100,14 @@ export function BlogPostsSection() {
         <h2 className="text-2xl font-bold">Latest Posts</h2>
 
         {/* Category Skeleton */}
-        <div className="flex pb-2 space-x-2 overflow-x-auto">
+        {/* <div className="flex pb-2 space-x-2 overflow-x-auto">
           {Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-20 h-8 rounded-full bg-muted animate-pulse"
             ></div>
           ))}
-        </div>
+        </div> */}
 
         {/* Posts Skeleton */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

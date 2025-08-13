@@ -1,4 +1,4 @@
-"use client";
+
 export function formatDate(timestamp: any): string {
   // Firestore Timestamp to JS Date
   let date: Date;
