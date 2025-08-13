@@ -12,6 +12,7 @@ import { AdSlot } from "@/components/ads/AdSlot"
 import { postsService } from "@/services/postsService"
 import { newsletterService } from "@/services/newsletterService"
 import type { BlogPost } from "@/types/blog"
+import { formatDate } from "@/lib/utils"
 
 export function Sidebar() {
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([])
@@ -47,7 +48,7 @@ export function Sidebar() {
       setIsSubscribing(false)
     }
   }
-
+console.log("popularPosts", popularPosts)
   return (
     <div className="space-y-8">
       {/* Newsletter Signup */}
@@ -83,62 +84,57 @@ export function Sidebar() {
       </div>
 
       {/* Ad Slot */}
-      <AdSlot slot="sidebar" format="vertical" />
+      {/* <AdSlot slot="sidebar" format="vertical" /> */}
 
       {/* Popular Posts */}
-      <div className="p-6 rounded-lg shadow-sm bg-card">
-        <div className="flex items-center mb-4 space-x-2">
-          <TrendingUp className="w-5 h-5 text-primary" />
-          <h3 className="font-semibold">Popular Posts</h3>
-        </div>
-
-        <div className="space-y-4">
-  {popularPosts.map((post, index) => (
+      <div className="space-y-4">
+      {popularPosts.map((post, index) => (
+  <div key={post.slug} className="group">
     <Link
-      key={post.slug}
       href={`/blog/${post.slug}`}
-      className="flex items-center gap-4 p-3 transition-all border rounded-lg group border-border bg-card hover:shadow-md"
+      className="flex items-center gap-4 p-3 transition-all rounded-lg hover:bg-muted/30"
     >
-      {/* Rank Badge */}
-      <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 font-bold text-white rounded-full bg-primary">
-        {index + 1}
-      </div>
-
       {/* Thumbnail */}
-      <div className="relative flex-shrink-0 overflow-hidden rounded-md w-14 h-14">
+      <div className="relative flex-shrink-0 w-16 h-16 overflow-hidden rounded-md">
         <Image
           src={post.featuredImage || "/placeholder.svg"}
           alt={post.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
-          
         />
       </div>
 
       {/* Post Info */}
       <div className="flex-1 min-w-0">
+        {/* Title */}
         <h4 className="text-sm font-medium leading-tight transition-colors line-clamp-2 group-hover:text-primary">
           {post.title}
         </h4>
-        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Eye className="w-3 h-3" />
-            <span>{post.views.toLocaleString()} views</span>
-          </div>
-          <span className="text-muted-foreground">•</span>
-          <span>
-            {new Date(
-              post.createdAt?.toDate?.() || post.createdAt
-            ).toLocaleDateString()}
-          </span>
+
+        {/* Meta Info */}
+        <div className="flex flex-wrap items-center mt-1 text-xs gap-x-3 gap-y-1 text-muted-foreground">
+          <span>{post.views.toLocaleString()} views</span>
+          <span>•</span>
+          <span>{post.createdAt.toDate().toDateString()}</span>
         </div>
+
+        {/* Read More Link */}
+        <span className="inline-block mt-1 text-xs font-medium text-primary group-hover:underline">
+          Read More →
+        </span>
       </div>
     </Link>
-  ))}
+
+    {/* Separator */}
+    {index !== popularPosts.length - 1 && (
+      <hr className="my-3 border-t border-border" />
+    )}
+  </div>
+))}
+
 </div>
 
-      </div>
     </div>
   )
 }

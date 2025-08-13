@@ -14,6 +14,7 @@ import {
 import { postsService } from "@/services/postsService";
 
 import Image from "next/image";
+import PostCard from "../blog/PostCard";
 
 export function BlogPostsSection() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export function BlogPostsSection() {
   const fetchPosts = useCallback(async () => {
     try {
       dispatch(setLoading(true));
+  
       const {
         posts: newPosts,
         totalPages: total,
@@ -35,15 +37,24 @@ export function BlogPostsSection() {
         6,
         selectedCategory === "all" ? undefined : selectedCategory
       );
-      dispatch(setPosts(newPosts));
+  
+      console.log("Fetched posts:", newPosts);
+      // ✅ Date ko string me convert
+      const cleanedPosts = newPosts.map(post => ({
+        ...post,
+        createdAt: post.createdAt?.toDate().toISOString() ?? null,
+        updatedAt: post.updatedAt?.toDate().toISOString() ?? null,
+      }));
+      
+  
+      // dispatch(setPosts(cleanedPosts));
       setTotalPages(total);
+  
     } catch (error) {
       console.error("Error fetching posts:", error);
-    } finally {
-      dispatch(setLoading(false));
-    }
+    } 
   }, [currentPage, selectedCategory, dispatch]);
-
+  
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
@@ -126,53 +137,17 @@ export function BlogPostsSection() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Latest Posts</h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {posts.map((post, index) => (
-          <div className="border rounded-md">
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="overflow-hidden transition-all duration-200 rounded-lg shadow-sm group bg-card hover:shadow-md"
-            >
-              <div className="relative w-full h-48 overflow-hidden">
-                <Image
-                  src={post.featuredImage || "/placeholder.svg"}
-                  alt={post.title}
-                  layout="fill"
-                  loading="lazy"
-                  objectFit="cover"
-                  className="transition-transform duration-200 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="p-4">
-                <div className="flex items-center mb-2 space-x-2">
-                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-                    {categories.find((c) => c.id === post.category)?.name ||
-                      post.category}
-                  </span>
-                </div>
-
-                <h3 className="mb-2 font-semibold transition-colors line-clamp-2 group-hover:text-primary">
-                  {post.title}
-                </h3>
-
-                <p className="mb-3 text-sm text-muted-foreground line-clamp-2">
-                  {post.summary}
-                </p>
-
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <div className="flex items-center space-x-2">
-                    <User className="w-3 h-3" />
-                    <span>{(post as any).author?.name || ""}</span> 
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-3 h-3" />
-                    <span>{post.readingTime}</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
+      {posts.map((post) => (
+         <PostCard
+         key={post.slug}
+         slug={post.slug}
+         title={post.title}
+         excerpt={post.excerpt}
+         featuredImage={post.featuredImage}
+         createdAt={post.createdAt}
+         author={post.author}
+         readingTime={post.readingTime}
+       />
         ))}
       </div>
 

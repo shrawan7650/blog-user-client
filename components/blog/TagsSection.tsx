@@ -9,8 +9,8 @@ export function TagsSection({ tags }: TagsSectionProps) {
   if (tags.length === 0) return null
 
   return (
-    <div className="mt-8 pt-8 border-t">
-      <div className="flex items-center space-x-2 mb-4">
+    <div className="mt-8">
+      <div className="flex items-center mb-4 space-x-2">
         <Tag className="w-4 h-4 text-muted-foreground" />
         <span className="text-sm font-medium">Tags</span>
       </div>
@@ -20,7 +20,7 @@ export function TagsSection({ tags }: TagsSectionProps) {
           <Link
             key={tag}
             href={`/search?q=${encodeURIComponent(tag)}`}
-            className="bg-muted hover:bg-accent px-3 py-1 rounded-full text-sm transition-colors"
+            className="px-3 py-1 text-sm transition-colors rounded-full bg-muted hover:bg-accent"
           >
             {tag}
           </Link>

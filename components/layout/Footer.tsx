@@ -242,22 +242,14 @@ export function Footer() {
         </div> */}
 
         {/* Bottom Footer */}
-        {/* <div className="pt-6 mt-8 text-center border-t border-gray-800">
+        <div className="pt-6 mt-8 text-center border-t border-gray-800">
           <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
             <p className="text-sm text-gray-400">
               &copy; {COMPANY_INFO.year} {COMPANY_INFO.name}. All rights reserved.
             </p>
-            <div className="flex justify-center space-x-4 sm:justify-end">
-              <Link href="/sitemap" className="text-sm text-gray-400 transition-colors hover:text-white">
-                Sitemap
-              </Link>
-              <span className="text-gray-600">|</span>
-              <Link href="/rss" className="text-sm text-gray-400 transition-colors hover:text-white">
-                RSS Feed
-              </Link>
-            </div>
+
           </div>
-        </div> */}
+        </div>
       </div>
     </footer>
   )

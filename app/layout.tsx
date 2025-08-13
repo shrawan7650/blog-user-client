@@ -86,7 +86,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body suppressHydrationWarning className={`${inter.className} antialiased`}>
         <Providers>
           <Suspense fallback={null}>
             <div className="min-h-screen bg-background text-foreground">

@@ -19,22 +19,22 @@ export default function HomePage() {
 
       {/* Trending Posts */}
       <section className="py-8 bg-muted/30">
-        <div className="container mx-auto px-4">
+        <div className="container px-4 mx-auto">
           <TrendingPosts />
         </div>
       </section>
 
       {/* Categories */}
       <section className="py-8">
-        <div className="container mx-auto px-4">
+        <div className="container px-4 mx-auto">
           <CategoriesSection />
         </div>
       </section>
 
       {/* Main Content */}
       <section className="py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="container px-4 mx-auto">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Blog Posts */}
             <div className="lg:col-span-2">
               <BlogPostsSection />
@@ -49,11 +49,11 @@ export default function HomePage() {
       </section>
 
       {/* Footer Ad */}
-      <div className="py-4 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <AdSlot slot="footer-banner" format="horizontal" className="max-w-4xl mx-auto" />
+      {/* <div className="py-4 bg-muted/20">
+        <div className="container px-4 mx-auto">
+          <AdSlot slot="footer-banner" format="vertical" className="max-w-4xl mx-auto" />
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

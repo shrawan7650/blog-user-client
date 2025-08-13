@@ -7,6 +7,7 @@ import { TrendingUp, Clock, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { postsService } from "@/services/postsService"
 import type { BlogPostWithAuthor } from "@/types/blog"
+import PostCard from "../blog/PostCard"
 
 export function TrendingPosts() {
   const [posts, setPosts] = useState<BlogPostWithAuthor[]>([])
@@ -174,52 +175,21 @@ export function TrendingPosts() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="overflow-hidden transition-all duration-200 rounded-lg shadow-sm group bg-card hover:shadow-md"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={post.featuredImage || "/placeholder.svg"}
-                  alt={post.title}
-                  fill
-                  className="object-cover transition-transform duration-200 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-
-              <div className="p-4">
-                <h3 className="mb-2 font-semibold transition-colors line-clamp-2 group-hover:text-primary">
-                  {post.title}
-                </h3>
-
-                <p className="mb-3 text-sm text-muted-foreground line-clamp-2">{post.summary}</p>
-
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <div className="flex items-center space-x-2">
-                    <div className="relative w-4 h-4 overflow-hidden rounded-full">
-                      <Image
-                        src={post.author.avatar || "/placeholder.svg?height=16&width=16&query=user"}
-                        alt={post.author.name}
-                        fill
-                        className="object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <span>{post.author.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-3 h-3" />
-                    <span>{post.readingTime}</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+       <PostCard
+       key={post.slug}
+       slug={post.slug}
+       title={post.title}
+       excerpt={post.excerpt}
+       featuredImage={post.featuredImage}
+       createdAt={post.createdAt.toDate().toISOString()}
+       author={post.author}
+       readingTime={post.readingTime}
+     />
+        ))}
+      </div>
+      
       )}
 
       {/* Pagination Navigation */}
