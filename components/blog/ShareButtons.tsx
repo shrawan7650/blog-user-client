@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Share2, Twitter, Linkedin, MessageCircle, Copy, Check } from "lucide-react"
+import { Share2, Twitter, Linkedin, MessageCircle, Copy, Check, Instagram } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { BlogPost } from "@/types/blog"
 
@@ -30,6 +30,7 @@ export function ShareButtons({ post }: ShareButtonsProps) {
     twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
     whatsapp: `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`,
+    instagram: `https://www.instagram.com/create/story/?url=${encodeURIComponent(url)}`, // Instagram doesn't support direct sharing like others
   }
 
   const copyToClipboard = async () => {
@@ -80,6 +81,10 @@ export function ShareButtons({ post }: ShareButtonsProps) {
 
           <Button variant="outline" size="sm" onClick={() => window.open(shareUrls.whatsapp, "_blank")}>
             <MessageCircle className="w-4 h-4" />
+          </Button>
+          {/* instagram */}
+          <Button variant="outline" size="sm" onClick={() => window.open(shareUrls.instagram, "_blank")}>
+            <Instagram className="w-4 h-4" />
           </Button>
 
           <Button variant="outline" size="sm" onClick={copyToClipboard}>

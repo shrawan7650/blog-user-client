@@ -63,13 +63,27 @@
   width: 6px;
   height: 6px;
 }
+@layer base {
+  a.internal-link {
+    @apply font-medium text-blue-600 underline hover:text-blue-800;
+  }
+}
+.internal-link {
+  color: #2563eb; /* blue-600 */
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.internal-link:hover {
+  color: #1e40af; /* darker blue */
+}
 
 ::-webkit-scrollbar-track {
   @apply bg-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full;
+  @apply rounded-full bg-muted-foreground/30;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -83,7 +97,7 @@
 
 /* Code block styling */
 pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto;
+  @apply p-4 overflow-x-auto rounded-lg bg-muted;
 }
 
 code {
@@ -91,7 +105,7 @@ code {
 }
 
 pre code {
-  @apply bg-transparent p-0;
+  @apply p-0 bg-transparent;
 }
 
 /* Loading animation */

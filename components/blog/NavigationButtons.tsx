@@ -39,7 +39,7 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
 
   if (loading) {
     return (
-      <div className="border-t ">
+      <div className="mt-2 border-t ">
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
           {/* Previous button skeleton */}
           <div className="flex-1">
@@ -77,7 +77,7 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
                     Previous
                   </div>
                   <div className="mt-1 text-sm font-semibold leading-tight transition-colors group-hover:text-primary">
-                    {prevPost.title.slice(0,40)}...
+                    {prevPost.title.slice(0,30)}...
                   </div>
                 </div>
               </Link>
@@ -103,7 +103,7 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
                     Next
                   </div>
                   <div className="mt-1 text-sm font-semibold leading-tight transition-colors group-hover:text-primary">
-                    {nextPost.title.slice(0,40)}...
+                    {nextPost.title.slice(0,30)}...
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 mt-1 transition-transform shrink-0 group-hover:translate-x-1 text-muted-foreground" />

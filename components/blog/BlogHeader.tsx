@@ -11,6 +11,7 @@ import {
   Twitter,
   Globe,
   ArrowLeft,
+  Instagram,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { BlogPostWithAuthor } from "@/types/blog";
@@ -55,45 +56,40 @@ export function BlogHeader({ post }: BlogHeaderProps) {
           {post.excerpt}
         </p>
         {/* //line */}
-        <hr className="border-t border-muted-foreground/20" />
 
         {/* Author Info */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Left Side - Author Card */}
+        {/* <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+         
           <Link
             href={`/author/${author.uid}`}
-            className="flex flex-col w-full gap-4 p-4 transition rounded-lg sm:flex-row sm:items-center bg-muted/20 hover:bg-muted/30"
+            className="flex flex-col w-full gap-4 p-4 transition rounded-lg sm:flex-row sm:items-center "
           >
-            <div className="relative flex-shrink-0 w-16 h-16 mx-auto overflow-hidden rounded-full sm:mx-0">
-              <Image
-                src={
-                  author.avatar ||
-                  "/placeholder.svg?height=64&width=64&query=user"
-                }
-                alt={author.name}
-                fill
-                className="object-cover"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="flex-1 text-center sm:text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                <h3 className="text-lg font-semibold">{author.name}</h3>
-                <span className="text-sm text-muted-foreground">
-                  {author.totalPosts}{" "}
-                  {author.totalPosts === 1 ? "post" : "posts"}
-                </span>
-              </div>
-              {author.bio && (
-                <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                  {author.bio}
-                </p>
+            <div className="relative w-20 h-20 mx-auto mb-1 overflow-hidden border rounded-full">
+              {author.avatar ? (
+                <Image
+                  src={author.avatar}
+                  alt={`${author.name}'s avatar`}
+                  fill 
+                  className="object-cover" 
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full text-2xl font-bold bg-gray-200 text-muted-foreground">
+                  {author?.name
+                    ? author.name
+                        .split(" ")
+                        .map((word) => word[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()
+                    : "?"}
+                </div>
               )}
             </div>
+
+    
           </Link>
 
-          {/* Right Side - Social Links */}
+        
           <div className=" sm:w-[40%]">
             {" "}
             {Object.keys(author.socialLinks).length > 0 && (
@@ -142,41 +138,51 @@ export function BlogHeader({ post }: BlogHeaderProps) {
                     </a>
                   </Button>
                 )}
+                {author.socialLinks.instagram && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  </Button>
+                )}
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Post Meta */}
-        <div className="flex flex-wrap items-center justify-between mt-5 text-sm text-muted-foreground">
-  {/* Left group */}
-  <div className="flex flex-wrap items-center gap-6">
-    <div className="flex items-center space-x-2">
-      <Calendar className="w-4 h-4" />
-      <span>{formatDate(post.createdAt)}</span>
-    </div>
+        <div className="max-w-md p-4 mt-5 space-y-3 text-sm border shadow-sm float-end rounded-2xl bg-card text-muted-foreground">
+          <div className="grid grid-cols-2 gap-3">
+            {/* Published Date */}
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-blue-500" />
+              <span>{formatDate(post.createdAt)}</span>
+            </div>
 
-    <div className="flex items-center space-x-2">
-      <Clock className="w-4 h-4" />
-      <span>{post.readingTime}</span>
-    </div>
+            {/* Reading Time */}
+            <div className="flex items-center space-x-2">
+              <Clock className="w-4 h-4 text-green-500" />
+              <span>{post.readingTime}</span>
+            </div>
 
-    <div className="flex items-center space-x-2">
-      <Eye className="w-4 h-4" />
-      <span>{post.views.toLocaleString()} views</span>
-    </div>
-  </div>
+            {/* Views */}
+            <div className="flex items-center space-x-2">
+              <Eye className="w-4 h-4 text-purple-500" />
+              <span>{post.views.toLocaleString()} views</span>
+            </div>
 
-  {/* Right group */}
-  <div className="flex items-center space-x-2">
-    <Calendar className="w-4 h-4 text-blue-500" />
-    <span>Updated: {formatDate(post.updatedAt)}</span>
-  </div>
-</div>
-
-        <hr className="border-t border-muted-foreground/20" />
+            {/* Updated Date */}
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-orange-500" />
+              <span>Updated: {formatDate(post.updatedAt)}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      {/* //last upadted blog */}
     </header>
   );
 }

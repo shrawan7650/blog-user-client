@@ -1,48 +1,53 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
-import Image from "next/image"
-import { Github, Twitter, Linkedin } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import useEmblaCarousel from "embla-carousel-react"
-import { collection, getDocs } from "firebase/firestore"
-import { db } from "@/lib/firebase"
-import type { User } from "@/types/blog"
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
+import { Github, Twitter, Linkedin, Globe, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import useEmblaCarousel from "embla-carousel-react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import type { User } from "@/types/blog";
+import Link from "next/link";
+import { fetchCategories } from "@/store/slices/categoriesSlice";
 
 export function TeamSection() {
-  const [team, setTeam] = useState<User[]>([])
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start" })
-  const [isLoading, setIsLoading] = useState(true)
+  const [team, setTeam] = useState<User[]>([]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+  });
+  const [isLoading, setIsLoading] = useState(true);
   // Fetch all users from Firestore
   const fetchUsers = useCallback(async () => {
     try {
-      setIsLoading(true)
-      const snapshot = await getDocs(collection(db, "users"))
+      setIsLoading(true);
+      const snapshot = await getDocs(collection(db, "users"));
       const usersData: User[] = snapshot.docs.map((doc) => {
-        const data = doc.data()
+        const data = doc.data();
         return {
           uid: doc.id,
           name: data.name || "Unknown Author",
           role: data.role || "",
           bio: data.bio || "",
-          avatar: data.avatar || "/placeholder.svg?height=300&width=300",
+          avatar: data.avatar,
           socialLinks: data.socialLinks || {},
           totalPosts: data.totalPosts || 0,
-        }
-      })
-      setTeam(usersData)
+        };
+      });
+      setTeam(usersData);
     } catch (err) {
-      console.error("Error fetching users:", err)
+      console.error("Error fetching users:", err);
+    } finally {
+      setIsLoading(false);
     }
-    finally {
-      setIsLoading(false)
-    }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchUsers()
-  }, [fetchUsers])
-  if (isLoading) {
+    fetchUsers();
+    fetchCategories();
+  }, [fetchUsers]);
+  if (isLoading || team.length === 0) {
     return (
       <section className="py-20 bg-gray-50">
         <div className="container px-4 mx-auto max-w-7xl">
@@ -69,16 +74,17 @@ export function TeamSection() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-muted/50">
       <div className="container px-4 mx-auto">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">Meet Our Team</h2>
           <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            The passionate individuals behind TechBlog, dedicated to bringing you the best content.
+            The passionate individuals behind TechBlog, dedicated to bringing
+            you the best content.
           </p>
         </div>
 
@@ -88,55 +94,111 @@ export function TeamSection() {
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
                 {team.map((member) => (
-                  <div
+                  <Link
+                    href={`/author/${member.uid}`}
                     key={member.uid}
-                    className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_20%] px-4"
+                    className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_50.333%] lg:flex-[0_0_30%] px-4"
                   >
-                    <div className="p-6 text-center rounded-lg shadow-sm bg-card">
-                      <div className="relative w-32 h-32 mx-auto mb-6">
-                        <Image
-                          src={member.avatar}
-                          alt={member.name}
-                          fill
-                          className="object-cover rounded-full"
-                          loading="lazy"
-                        />
-                      </div>
-                      <h3 className="mb-2 text-xl font-bold">{member.name}</h3>
-                      <p className="mb-6 leading-relaxed text-muted-foreground line-clamp-3">
-                        {member.bio}
-                      </p>
-                      <div className="flex justify-center space-x-2">
-                        {member.socialLinks?.twitter && (
-                          <Button variant="outline" size="sm" asChild>
-                            <a href={member.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                              <Twitter className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        )}
-                        {member.socialLinks?.linkedin && (
-                          <Button variant="outline" size="sm" asChild>
-                            <a href={member.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                              <Linkedin className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        )}
-                        {member.socialLinks?.github && (
-                          <Button variant="outline" size="sm" asChild>
-                            <a href={member.socialLinks.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        )}
+                    <div
+                      key={member.uid}
+                      className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_20%] px-4 cursor-pointer"
+                    >
+                      <div className="p-6 text-center rounded-lg shadow-sm bg-card">
+                        <div className="relative w-32 h-32 mx-auto mb-6 overflow-hidden border rounded-full">
+                          {member.avatar ? (
+                            <Image
+                              src={member.avatar}
+                              alt={`${member.name}'s avatar`}
+                              fill // Makes it fill the parent div
+                              className="object-cover" // Ensures proper scaling without distortion
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center w-full h-full text-2xl font-bold bg-gray-200 text-muted-foreground">
+                              {member?.name
+                                ? member.name
+                                    .split(" ")
+                                    .map((word) => word[0])
+                                    .join("")
+                                    .slice(0, 2)
+                                    .toUpperCase()
+                                : "?"}
+                            </div>
+                          )}
+                        </div>
+
+                        <h3 className="mb-2 text-xl font-bold">
+                          {member.name}
+                        </h3>
+                        <p className="mb-6 leading-relaxed text-muted-foreground line-clamp-3">
+                          {member.bio}
+                        </p>
+                        <div className="flex flex-wrap justify-center space-x-1">
+                          {member.socialLinks?.twitter && (
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={member.socialLinks.twitter}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Twitter className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {member.socialLinks?.linkedin && (
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={member.socialLinks.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Linkedin className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {member.socialLinks?.github && (
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={member.socialLinks.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Github className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {member.socialLinks?.website && (
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={member.socialLinks.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Globe className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {member.socialLinks?.instagram && (
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={member.socialLinks.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Instagram className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {/* //instagram and other */}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
 
             {/* Navigation buttons */}
-            {team.length > 3 && (
+            {team.length >= 3 && (
               <div className="flex justify-center mt-6 space-x-4">
                 <Button
                   variant="outline"
@@ -158,5 +220,5 @@ export function TeamSection() {
         )}
       </div>
     </section>
-  )
+  );
 }

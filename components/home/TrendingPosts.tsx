@@ -186,6 +186,7 @@ export function TrendingPosts() {
        createdAt={post.createdAt.toDate().toISOString()}
        author={post.author}
        readingTime={post.readingTime}
+       views={post.views} 
      />
         ))}
       </div>

@@ -1,145 +1,175 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { Copy, Check, ChevronDown, ChevronUp, ExternalLink, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { AdSlot } from "@/components/ads/AdSlot"
-import type { BlogContentBlock } from "@/types/blog"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
+import React,{ useState } from "react";
+import Image from "next/image";
+import {
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AdSlot } from "@/components/ads/AdSlot";
+import type { BlogContentBlock } from "@/types/blog";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface BlogContentProps {
-  blocks: BlogContentBlock[]
+  blocks: BlogContentBlock[];
 }
 
 export function BlogContent({ blocks }: BlogContentProps) {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null)
-  const [expandedFAQs, setExpandedFAQs] = useState<Set<number>>(new Set())
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
-   
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [expandedFAQs, setExpandedFAQs] = useState<Set<number>>(new Set());
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
   const copyToClipboard = async (code: string, blockId: string) => {
     try {
-      await navigator.clipboard.writeText(code)
-      setCopiedCode(blockId)
-      setTimeout(() => setCopiedCode(null), 2000)
-    } catch (error) {
-      
-     
-    }
-  }
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(blockId);
+      setTimeout(() => setCopiedCode(null), 2000);
+    } catch (error) {}
+  };
 
   const toggleFAQ = (index: number) => {
-    const newExpanded = new Set(expandedFAQs)
+    const newExpanded = new Set(expandedFAQs);
     if (newExpanded.has(index)) {
-      newExpanded.delete(index)
+      newExpanded.delete(index);
     } else {
-      newExpanded.add(index)
+      newExpanded.add(index);
     }
-    setExpandedFAQs(newExpanded)
-  }
+    setExpandedFAQs(newExpanded);
+  };
 
   // Helper function to safely render text content
   const renderTextContent = (content: any): string => {
-    if (typeof content === 'string') {
-      return content
+    if (typeof content === "string") {
+      return content;
     }
-    if (typeof content === 'object' && content !== null) {
-      return JSON.stringify(content)
+    if (typeof content === "object" && content !== null) {
+      return JSON.stringify(content);
     }
-    return String(content)
-  }
+    return String(content);
+  };
 
   // Helper function to recursively render nested blocks
   const renderNestedBlocks = (items: any[]): JSX.Element[] => {
     return items.map((item, itemIndex) => {
-      if (typeof item === 'string') {
-        return <span key={itemIndex}>{item}</span>
+      if (typeof item === "string") {
+        return <span key={itemIndex}>{item}</span>;
       }
-      
-      if (typeof item === 'object' && item.type) {
-        return <div key={itemIndex}>{renderBlock(item, itemIndex)}</div>
+
+      if (typeof item === "object" && item.type) {
+        return <div key={itemIndex}>{renderBlock(item, itemIndex)}</div>;
       }
-      
-      return <span key={itemIndex}>{renderTextContent(item)}</span>
-    })
-  }
+
+      return <span key={itemIndex}>{renderTextContent(item)}</span>;
+    });
+  };
+  console.log("blocks", blocks);
 
   const renderBlock = (block: BlogContentBlock, index: number) => {
-    if (!block || typeof block !== 'object') {
-      return null
+    if (!block || typeof block !== "object") {
+      return null;
     }
 
     // Insert ads after 2nd and 6th paragraphs
-    const shouldShowAd = block.type === "paragraph" && (index === 2 || index === 6)
+    const shouldShowAd =
+      block.type === "paragraph" && (index === 2 || index === 6);
 
     switch (block.type) {
-      case "heading":
-        const HeadingTag = `h${block.data.level}` as keyof JSX.IntrinsicElements
+      case "heading": {
+        const HeadingTag = `h${block.data.level}` as keyof JSX.IntrinsicElements;
         return (
-          <div key={block.id || index}>
+          <React.Fragment key={block.id || index}>
             <HeadingTag
               className={`font-bold mb-4 ${
                 block.data.level === 1
                   ? "text-3xl"
                   : block.data.level === 2
-                    ? "text-2xl"
-                    : block.data.level === 3
-                      ? "text-xl"
-                      : block.data.level === 4
-                        ? "text-lg"
-                        : "text-base"
+                  ? "text-2xl"
+                  : block.data.level === 3
+                  ? "text-xl"
+                  : block.data.level === 4
+                  ? "text-lg"
+                  : "text-base"
               }`}
-            >
-              {renderTextContent(block.data.text)}
-            </HeadingTag>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
-          </div>
-        )
-
+              dangerouslySetInnerHTML={{ __html: block.data.text }} // ✅ keeps <a> tags
+            />
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
+          </React.Fragment>
+        );
+      }
+      
       case "paragraph":
         return (
-          <div key={block.id || index}>
-            <p className="mb-6 leading-relaxed text-foreground/90">
-              {renderTextContent(block.data.text)}
-            </p>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
-          </div>
-        )
+          <React.Fragment key={block.id || index}>
+            <p
+              className="mb-6 leading-relaxed text-foreground/90"
+              dangerouslySetInnerHTML={{ __html: block.data.text }} // ✅ keeps <a> tags
+            />
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
+          </React.Fragment>
+        );
+      
+     
+        case "list":
+        let ListTag: any = "ul";
+        let listClass = "";
 
-      case "list":
-        const ListTag = block.data.type === "ordered" || block.data.type === "numbered" ? "ol" : "ul"
-        const listClass = block.data.type === "ordered" || block.data.type === "numbered" ? "list-decimal" : "list-disc"
-        
+        if (block.data.type === "ordered") {
+          ListTag = "ol";
+          listClass = "list-none list-inside space-y-4 mb-4 ml-4";
+        } else if (block.data.type === "unordered") {
+          ListTag = "ul";
+          listClass = "list-disc list-inside space-y-4 mb-4 ml-4";
+        } else if (block.data.type === "numbered") {
+          ListTag = "ol";
+          listClass = "list-none numbered space-y-4 mb-4 ml-4";
+        }
+
         return (
-          <div key={block.id || index}>
-            <ListTag className={`mb-6 space-y-2 ${listClass} list-inside`}>
-              {block.data.items.map((item: any, itemIndex: number) => {
-                // Handle nested objects in list items
-                if (typeof item === 'object' && item.type) {
-                  return (
-                    <li key={itemIndex} className="leading-relaxed">
-                      <div className="inline-block w-full">
-                        {renderBlock(item, itemIndex)}
-                      </div>
-                    </li>
-                  )
-                }
-                
-                // Handle simple string items
-                return (
-                  <li key={itemIndex} className="leading-relaxed">
-                    {renderTextContent(item)}
-                  </li>
-                )
-              })}
-            </ListTag>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
-          </div>
-        )
+          <ListTag 
+            key={block.id || index}
+            style={{ marginLeft: "1.5rem" }} // Adjust left margin for better alignment
+          className={listClass}>
+            {block.data.items?.map(
+              (
+                item: { title: string; paragraphs: { text: string }[] },
+                index: number
+              ) => (
+                <li key={index} className="text-base leading-relaxed">
+                  {/* Title */}
+                  {item.title && (
+                    <div className="flex items-center gap-2">
+                      <span className="mb-1 font-semibold">{index + 1}.</span>
+
+                      <p className="mb-1 font-semibolds">{item.title}</p>
+                    </div>
+                  )}
+
+                  {/* Paragraphs */}
+                  {item.paragraphs?.map((para, pIndex) => (
+                    <p
+                      key={pIndex}
+                      className="mb-2"
+                      dangerouslySetInnerHTML={{ __html: para.text }}
+                    />
+                  ))}
+                </li>
+              )
+            )}
+          </ListTag>
+        );
 
       case "code":
-        const blockId = `code-${block.id || index}`
+        const blockId = `code-${block.id || index}`;
         return (
           <div key={block.id || index} className="mb-6">
             <div className="relative">
@@ -158,19 +188,30 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 variant="ghost"
                 size="sm"
                 className="absolute w-8 h-8 p-0 top-2 right-2"
-                onClick={() => copyToClipboard(renderTextContent(block.data.code), blockId)}
+                onClick={() =>
+                  copyToClipboard(renderTextContent(block.data.code), blockId)
+                }
               >
-                {copiedCode === blockId ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                {copiedCode === blockId ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
             </div>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "image":
         return (
           <div key={block.id || index} className="mb-6">
-            <div className="relative cursor-pointer group" onClick={() => setLightboxImage(block.data.url)}>
+            <div
+              className="relative cursor-pointer group"
+              onClick={() => setLightboxImage(block.data.url)}
+            >
               <Image
                 src={block.data.url || "/placeholder.svg"}
                 alt={block.data.alt || ""}
@@ -184,9 +225,11 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 </p>
               )}
             </div>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "gallery":
         return (
@@ -207,9 +250,11 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 </div>
               ))}
             </div>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "table":
         return (
@@ -217,11 +262,16 @@ export function BlogContent({ blocks }: BlogContentProps) {
             <table className="w-full border border-collapse rounded-lg border-border">
               <thead>
                 <tr className="bg-muted">
-                  {block.data.headers.map((header: string, headerIndex: number) => (
-                    <th key={headerIndex} className="p-3 font-semibold text-left border border-border">
-                      {renderTextContent(header)}
-                    </th>
-                  ))}
+                  {block.data.headers.map(
+                    (header: string, headerIndex: number) => (
+                      <th
+                        key={headerIndex}
+                        className="p-3 font-semibold text-left border border-border"
+                      >
+                        {renderTextContent(header)}
+                      </th>
+                    )
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -236,22 +286,26 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 ))}
               </tbody>
             </table>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "faq":
         return (
           <div key={block.id || index} className="mb-6 space-y-4">
             {block.data.items.map((faq: any, faqIndex: number) => {
-              const isExpanded = expandedFAQs.has(faqIndex)
+              const isExpanded = expandedFAQs.has(faqIndex);
               return (
                 <div key={faqIndex} className="border rounded-lg border-border">
                   <button
                     className="flex items-center justify-between w-full p-4 text-left transition-colors hover:bg-muted/50"
                     onClick={() => toggleFAQ(faqIndex)}
                   >
-                    <span className="font-medium">{renderTextContent(faq.question)}</span>
+                    <span className="font-medium">
+                      {renderTextContent(faq.question)}
+                    </span>
                     {isExpanded ? (
                       <ChevronUp className="w-5 h-5 text-muted-foreground" />
                     ) : (
@@ -264,11 +318,13 @@ export function BlogContent({ blocks }: BlogContentProps) {
                     </div>
                   )}
                 </div>
-              )
+              );
             })}
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "product":
         return (
@@ -285,42 +341,64 @@ export function BlogContent({ blocks }: BlogContentProps) {
                   />
                 </div>
                 <div className="space-y-4 md:w-2/3">
-                  <h3 className="text-xl font-bold">{renderTextContent(block.data.title)}</h3>
-                  <p className="text-muted-foreground">{renderTextContent(block.data.description)}</p>
+                  <h3 className="text-xl font-bold">
+                    {renderTextContent(block.data.title)}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {renderTextContent(block.data.description)}
+                  </p>
                   <Button asChild>
-                    <a href={block.data.url} target="_blank" rel="noopener noreferrer">
-                      {renderTextContent(block.data.buttonText) || "Check Price"}
+                    <a
+                      href={block.data.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {renderTextContent(block.data.buttonText) ||
+                        "Check Price"}
                       <ExternalLink className="w-4 h-4 ml-2" />
                     </a>
                   </Button>
                 </div>
               </div>
             </div>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "callout":
         const calloutStyles = {
-          info: "bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-100",
+          info:
+            "bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-100",
           warning:
             "bg-yellow-50 border-yellow-200 text-yellow-900 dark:bg-yellow-950 dark:border-yellow-800 dark:text-yellow-100",
-          error: "bg-red-50 border-red-200 text-red-900 dark:bg-red-950 dark:border-red-800 dark:text-red-100",
+          error:
+            "bg-red-50 border-red-200 text-red-900 dark:bg-red-950 dark:border-red-800 dark:text-red-100",
           success:
             "bg-green-50 border-green-200 text-green-900 dark:bg-green-950 dark:border-green-800 dark:text-green-100",
-        }
+        };
 
         return (
           <div key={block.id || index} className="mb-6">
             <div
-              className={`border-l-4 p-4 rounded-r-lg ${calloutStyles[block.data.type as keyof typeof calloutStyles] || calloutStyles.info}`}
+              className={`border-l-4 p-4 rounded-r-lg ${
+                calloutStyles[block.data.type as keyof typeof calloutStyles] ||
+                calloutStyles.info
+              }`}
             >
-              {block.data.title && <h4 className="mb-2 font-semibold">{renderTextContent(block.data.title)}</h4>}
+              {block.data.title && (
+                <h4 className="mb-2 font-semibold">
+                  {renderTextContent(block.data.title)}
+                </h4>
+              )}
               <p>{renderTextContent(block.data.content)}</p>
             </div>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "quote":
         return (
@@ -333,16 +411,21 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 </cite>
               )}
             </blockquote>
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
       case "embed":
         const getEmbedContent = () => {
-          if (block.data.url.includes("youtube.com") || block.data.url.includes("youtu.be")) {
+          if (
+            block.data.url.includes("youtube.com") ||
+            block.data.url.includes("youtu.be")
+          ) {
             const videoId = block.data.url.includes("youtu.be")
               ? block.data.url.split("/").pop()
-              : new URL(block.data.url).searchParams.get("v")
+              : new URL(block.data.url).searchParams.get("v");
 
             return (
               <iframe
@@ -351,80 +434,94 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 allowFullScreen
                 title="YouTube video"
               />
-            )
+            );
           }
 
-          if (block.data.url.includes("twitter.com") || block.data.url.includes("x.com")) {
+          if (
+            block.data.url.includes("twitter.com") ||
+            block.data.url.includes("x.com")
+          ) {
             return (
               <div className="p-4 text-center border rounded-lg bg-card">
                 <p className="mb-4 text-muted-foreground">Twitter/X Embed</p>
                 <Button asChild variant="outline">
-                  <a href={block.data.url} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={block.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     View Tweet
                     <ExternalLink className="w-4 h-4 ml-2" />
                   </a>
                 </Button>
               </div>
-            )
+            );
           }
 
           return (
             <div className="p-4 text-center border rounded-lg bg-card">
               <p className="mb-4 text-muted-foreground">External Content</p>
               <Button asChild variant="outline">
-                <a href={block.data.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={block.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   View Content
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </a>
               </Button>
             </div>
-          )
-        }
+          );
+        };
 
         return (
           <div key={block.id || index} className="mb-6">
             {getEmbedContent()}
-            {shouldShowAd && <AdSlot slot="content-ad" format="horizontal" className="my-8" />}
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
           </div>
-        )
+        );
 
-        case "divider": {
-          const styleMap = {
-            solid: "border-solid",
-            dashed: "border-dashed",
-            dotted: "border-dotted",
-            double: "border-double",
-          };
-        
-          return (
-            <div key={block.id || index} className="mb-6">
-              <hr
-                className={`border-border ${
-                  styleMap[block.data?.style] || "border-solid"
-                } border-t-2`}
-              />
-              {shouldShowAd && (
-                <AdSlot slot="content-ad" format="horizontal" className="my-8" />
-              )}
-            </div>
-          );
-        }
-        
+      case "divider": {
+        const styleMap = {
+          solid: "border-solid",
+          dashed: "border-dashed",
+          dotted: "border-dotted",
+          double: "border-double",
+        };
+
+        return (
+          <div key={block.id || index} className="mb-6">
+            <hr
+              className={`border-border ${
+                styleMap[block.data?.style] || "border-solid"
+              } border-t-2`}
+            />
+            {shouldShowAd && (
+              <AdSlot slot="content-ad" format="horizontal" className="my-8" />
+            )}
+          </div>
+        );
+      }
 
       default:
-       
         return (
-          <div key={block.id || index} className="p-4 mb-6 border border-yellow-200 rounded bg-yellow-50">
+          <div
+            key={block.id || index}
+            className="p-4 mb-6 border border-yellow-200 rounded bg-yellow-50"
+          >
             <p className="text-yellow-800">Unknown block type: {block.type}</p>
             <pre className="mt-2 overflow-auto text-xs text-yellow-600">
               {JSON.stringify(block, null, 2)}
             </pre>
           </div>
-        )
+        );
     }
-  }
+  };
 
-  const safeBlocks = Array.isArray(blocks) ? blocks : []
+  const safeBlocks = Array.isArray(blocks) ? blocks : [];
 
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert">
@@ -456,5 +553,5 @@ export function BlogContent({ blocks }: BlogContentProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -52,7 +52,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container px-4 py-8 mx-auto">
         <CategoryHeader category={category} />
         <CategoryPosts categoryId={category.id} />
       </div>

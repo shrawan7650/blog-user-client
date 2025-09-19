@@ -147,6 +147,7 @@ export function BlogPostsSection() {
          createdAt={post.createdAt}
          author={post.author}
          readingTime={post.readingTime}
+          views={post.views} // Pass views prop
        />
         ))}
       </div>

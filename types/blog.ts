@@ -25,6 +25,7 @@ export interface User {
     linkedin?: string
     twitter?: string
     website?: string
+    instagram?: string
   }
   totalPosts?: number // Will be calculated
 }
@@ -34,6 +35,7 @@ export interface Category {
   name: string
   slug: string
   icon: string
+  description:string
 }
 
 export interface BlogContentBlock {

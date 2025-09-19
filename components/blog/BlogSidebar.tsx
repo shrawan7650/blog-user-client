@@ -1,52 +1,34 @@
 "use client";
-
 import { AdSlot } from "@/components/ads/AdSlot";
+
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { TableOfContents } from "./TableOfContents";
 
-export function BlogSidebar() {
+export function BlogSidebar({ post }) {
   const { items: categories, loading } = useSelector((state: any) => state.categories);
 
   return (
-<div className="space-y-8">
-  {/* Sticky Ad */}
-  <div>
-    <AdSlot slot="blog-sidebar" format="horizontal" />
-  </div>
+    <div className="space-y-8">
+      {/* Table of Contents - Add this as the first item */}
+      <TableOfContents post={post} />
+      
+      {/* Sticky Ad */}
+      {/* <div>
+        <AdSlot slot="blog-sidebar" format="horizontal" />
+      </div> */}
 
-  {/* Categories List */}
-  <div className="space-y-4">
-    <h2 className="text-lg font-semibold">Categories</h2>
-    <div
-      className="overflow-y-auto border rounded-lg shadow-lg bg-popover max-h-60 sm:max-h-80 md:max-h-96 scrollbar-hide"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-    >
-      {loading ? (
-        <div className="p-2 space-y-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-10 rounded-md bg-muted animate-pulse"
-            />
-          ))}
-        </div>
-      ) : (
-        categories.map((category:any) => (
-          <Link
-            key={category.id}
-            href={`/category/${category.slug}`}
-            className="block px-4 py-3 text-sm transition-colors sm:py-2 hover:bg-accent sm:text-base"
-          >
-            <div className="flex items-center space-x-2">
-              {category.icon && <span className="text-lg">{category.icon}</span>}
-              <span>{category.name}</span>
-            </div>
-          </Link>
-        ))
-      )}
+    
+
+      {/* Debug info - Remove this in production */}
+      {/* {process.env.NODE_ENV === 'development' && (
+        <details className="text-xs text-gray-500">
+          <summary>Post Data (Dev Only)</summary>
+          <pre className="p-2 mt-2 overflow-auto bg-gray-100 rounded max-h-40">
+            {JSON.stringify(post, null, 2)}
+          </pre>
+        </details>
+      )} */}
     </div>
-  </div>
-</div>
-
   );
 }

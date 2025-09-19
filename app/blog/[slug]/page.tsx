@@ -65,6 +65,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
   try {
     post = await postsService.getPostBySlug(params.slug)
+    // console.log("post", post)
    
   } catch (error) {
     console.error("Error fetching post:", error)
@@ -104,7 +105,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <article className="min-h-screen">
+      <article className="min-h-screen bg-muted/50">
         <div className="container px-4 py-8 mx-auto">
         {/* <pre>{JSON.stringify(post, null, 2)}</pre> */}
 
@@ -113,10 +114,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
             <div className="lg:col-span-3">
               <BlogHeader post={post} />
      {/* {console.log("post.category",post.category)} */}
-             <div className="flex items-center justify-between my-6 mb-2 border-b ">
-                <ShareButtons post={post} />
-                <LikeButton postSlug={post.slug} initialLikes={post.likes} />
-              </div> 
+          
 
               <BlogContent blocks={post.content} />
 
@@ -133,7 +131,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <BlogSidebar />
+              <BlogSidebar post={post} />
             </div>
           </div>
         </div>

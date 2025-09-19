@@ -95,18 +95,14 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-border/40 shadow-sm">
+      <nav className="sticky top-0 z-50  backdrop-blur-xl bg-muted/50 supports-[backdrop-filter]:bg-background/80 border-b border-border/40 shadow-sm">
         <div className="container px-4 mx-auto lg:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="flex items-center justify-center w-8 h-8 transition-all duration-200 rounded-lg shadow-sm bg-gradient-to-br from-primary to-primary/80 group-hover:shadow-md">
-                <span className="text-lg font-bold text-primary-foreground">
-                  T
-                </span>
-              </div>
+         
               <span className="text-xl font-bold text-transparent bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                TechBlog
+               Inspitech Blog
               </span>
             </Link>
 
@@ -286,11 +282,8 @@ export function Navbar() {
                         className="flex items-center space-x-3 p-2.5 rounded-lg transition-all duration-200 hover:bg-primary/5 hover:text-primary group"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="text-lg transition-transform group-hover:scale-110">
-                          {category.icon}
-                        </span>
                         <span className="text-sm font-medium">
-                          {category.name}
+                        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                         </span>
                       </Link>
                     ))}

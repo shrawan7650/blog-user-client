@@ -23,23 +23,23 @@ export function MissionSection() {
   ]
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Drives Us</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <section className="py-20 bg-muted/50">
+      <div className="container px-4 mx-auto">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">What Drives Us</h2>
+          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
             Our commitment to excellence and passion for technology guides everything we do.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {values.map((value, index) => (
             <div key={index} className="text-center">
-              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10">
                 <value.icon className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-4">{value.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{value.description}</p>
+              <h3 className="mb-4 text-xl font-bold">{value.title}</h3>
+              <p className="leading-relaxed text-muted-foreground">{value.description}</p>
             </div>
           ))}
         </div>

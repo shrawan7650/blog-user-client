@@ -10,6 +10,7 @@ import { SearchModal } from "@/components/ui/SearchModal"
 import { PerformanceDebugger } from "@/components/performance/PerformanceMonitor"
 import Script from "next/script"
 import { Suspense } from "react"
+import CategoriesNav from "@/components/category/CategoriesNav"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,31 +18,36 @@ const inter = Inter({
   preload: true,
 })
 
+// app/layout.tsx
 export const metadata: Metadata = {
-  title: "TechBlog - Latest Tech News & Tutorials",
-  description: "Stay updated with the latest technology trends, tutorials, and insights from industry experts.",
-  keywords: "technology, programming, tutorials, tech news, web development",
-  authors: [{ name: "TechBlog Team" }],
+  title: "BlogSphere - Stories, Insights & Ideas",
+  description:
+    "Discover diverse stories, tutorials, news, and insights across technology, lifestyle, travel, food, and more.",
+  keywords:
+    "blog, news, articles, tutorials, lifestyle, travel, food, technology, opinions, guides",
+  authors: [{ name: "BlogSphere Team" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://techblog.com",
-    siteName: "TechBlog",
-    title: "TechBlog - Latest Tech News & Tutorials",
-    description: "Stay updated with the latest technology trends, tutorials, and insights from industry experts.",
+    url: "https://blogsphere.com",
+    siteName: "BlogSphere",
+    title: "BlogSphere - Stories, Insights & Ideas",
+    description:
+      "Discover diverse stories, tutorials, news, and insights across technology, lifestyle, travel, food, and more.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "TechBlog",
+        alt: "BlogSphere Cover",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TechBlog - Latest Tech News & Tutorials",
-    description: "Stay updated with the latest technology trends, tutorials, and insights from industry experts.",
+    title: "BlogSphere - Stories, Insights & Ideas",
+    description:
+      "Discover diverse stories, tutorials, news, and insights across technology, lifestyle, travel, food, and more.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -55,14 +61,16 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
+
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -89,8 +97,9 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.className} antialiased`}>
         <Providers>
           <Suspense fallback={null}>
-            <div className="min-h-screen bg-background text-foreground">
+            <div className="min-h-screen bg-muted/50 text-foreground">
               <Navbar />
+              <CategoriesNav/>
               <main className="flex-1">{children}</main>
               <Footer />
               <SearchModal />

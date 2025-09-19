@@ -215,7 +215,7 @@ export const postsService = {
         }
         const serializedPost = serializeData(post);
           setCache(cacheKey, serializedPost, LONG_CACHE_TTL) // Cache posts longer
-          return post
+          return serializedPost
       } catch (error) {
         console.error("Error fetching post:", error)
         throw error
