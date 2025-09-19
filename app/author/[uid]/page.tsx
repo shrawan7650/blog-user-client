@@ -19,6 +19,7 @@ import { postsService } from "@/services/postsService";
 import type { User, BlogPostWithAuthor } from "@/types/blog";
 import { Suspense } from "react";
 import { formatDate } from "@/utils/form-date";
+import PostCard from "@/components/blog/PostCard";
 
 interface AuthorPageProps {
   params: {
@@ -134,7 +135,7 @@ export default async function AuthorPage({
   return (
     <div className="min-h-screen">
       <div className="container px-4 py-8 mx-auto">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <Suspense
             fallback={
               <>
@@ -156,18 +157,16 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
   let totalPages = 0;
 
   // Get current page from search params, default to 1
-  const currentPage = parseInt(searchParams.page || "1", 10);
+  const currentPage = parseInt(searchParams.page || "1", 12);
 
   try {
     author = await usersService.getUserById(params.uid);
-   
 
     if (author) {
-    
       const result = await postsService.getPostsByAuthor(
         params.uid,
         currentPage,
-        10
+        12
       );
       posts = result.posts;
       totalPages = result.totalPages;
@@ -176,7 +175,6 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
     console.error("Error fetching author or posts:", error);
     notFound();
   }
-
 
   if (!author) {
     notFound();
@@ -191,8 +189,8 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
   return (
     <>
       {/* Author Header */}
-      <div className="p-8 mb-8 rounded-lg shadow-sm bg-card">
-        <div className="flex flex-col items-start space-y-6 md:flex-row md:space-y-0 md:space-x-8">
+      <div className="p-6 mb-8 rounded-lg shadow-sm bg-muted/50">
+        <div className="flex flex-col items-start space-y-6 md:flex-row md:space-y-0 md:space-x-8 bg-muted/50">
           <div className="relative flex-shrink-0 w-32 h-32 overflow-hidden rounded-full">
             <Image
               src={
@@ -221,64 +219,63 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
               </p>
             )}
 
-      {/* Social Links */}
-{Object.keys(author.socialLinks || {}).length > 0 && (
-  <div className="flex flex-wrap gap-2 mt-4">
-    {author.socialLinks.github && (
-      <Button variant="outline" size="sm" asChild>
-        <a
-          href={author.socialLinks.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-        >
-          <Github className="w-4 h-4 mr-1" />
-          GitHub
-        </a>
-      </Button>
-    )}
-    {author.socialLinks.linkedin && (
-      <Button variant="outline" size="sm" asChild>
-        <a
-          href={author.socialLinks.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-        >
-          <Linkedin className="w-4 h-4 mr-1" />
-          LinkedIn
-        </a>
-      </Button>
-    )}
-    {author.socialLinks.twitter && (
-      <Button variant="outline" size="sm" asChild>
-        <a
-          href={author.socialLinks.twitter}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-        >
-          <Twitter className="w-4 h-4 mr-1" />
-          Twitter
-        </a>
-      </Button>
-    )}
-    {author.socialLinks.website && (
-      <Button variant="outline" size="sm" asChild>
-        <a
-          href={author.socialLinks.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-        >
-          <Globe className="w-4 h-4 mr-1" />
-          Website
-        </a>
-      </Button>
-    )}
-  </div>
-)}
-
+            {/* Social Links */}
+            {Object.keys(author.socialLinks || {}).length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {author.socialLinks.github && (
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Github className="w-4 h-4 mr-1" />
+                      GitHub
+                    </a>
+                  </Button>
+                )}
+                {author.socialLinks.linkedin && (
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Linkedin className="w-4 h-4 mr-1" />
+                      LinkedIn
+                    </a>
+                  </Button>
+                )}
+                {author.socialLinks.twitter && (
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Twitter className="w-4 h-4 mr-1" />
+                      Twitter
+                    </a>
+                  </Button>
+                )}
+                {author.socialLinks.website && (
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Globe className="w-4 h-4 mr-1" />
+                      Website
+                    </a>
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -298,145 +295,147 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
           )} */}
         </div>
 
-        {posts.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {posts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="overflow-hidden transition-all duration-200 rounded-lg shadow-sm group bg-card hover:shadow-md"
+        <div>
+
+
+          {posts.length === 0 ? (
+            // Loading / Empty state
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="overflow-hidden rounded-lg shadow-sm bg-card animate-pulse"
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={post.featuredImage || "/placeholder.svg"}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-200 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="mb-3 text-xl font-bold transition-colors line-clamp-2 group-hover:text-primary">
-                      {post.title}
-                    </h3>
-
-                    <p className="mb-4 text-muted-foreground line-clamp-3">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>{formatDate(post.createdAt)}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4" />
-                        <span>{post.readingTime}</span>
-                      </div>
+                  <div className="h-48 bg-muted"></div>
+                  <div className="p-4 space-y-3">
+                    <div className="w-3/4 h-4 rounded bg-muted"></div>
+                    <div className="w-full h-3 rounded bg-muted"></div>
+                    <div className="w-2/3 h-3 rounded bg-muted"></div>
+                    <div className="flex space-x-4">
+                      <div className="w-16 h-3 rounded bg-muted"></div>
+                      <div className="w-16 h-3 rounded bg-muted"></div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
+          ) : posts.length > 0 ? (
+            <>
+              {/* Posts Grid */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.map((post) => (
+                  <PostCard
+                    key={post.slug}
+                    slug={post.slug}
+                    title={post.title}
+                    excerpt={post.excerpt}
+                    featuredImage={post.featuredImage}
+                    createdAt={post.createdAt.toDate().toISOString()}
+                    author={post.author}
+                    readingTime={post.readingTime}
+                    views={post.views} // Pass views prop
+                  />
+                ))}
+              </div>
 
-            {/* Pagination Navigation */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center mt-8 space-x-2">
-                {/* Previous Page Button */}
-                {currentPage > 1 ? (
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={generatePageUrl(currentPage - 1)}>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center mt-8 space-x-2">
+                  {/* Previous Page */}
+                  {currentPage > 1 ? (
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={generatePageUrl(currentPage - 1)}>
+                        <ChevronLeft className="w-4 h-4 mr-1" />
+                        Previous
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" disabled>
                       <ChevronLeft className="w-4 h-4 mr-1" />
                       Previous
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button variant="outline" size="sm" disabled>
-                    <ChevronLeft className="w-4 h-4 mr-1" />
-                    Previous
-                  </Button>
-                )}
-
-                {/* Page Numbers */}
-                <div className="flex items-center space-x-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (pageNum) => {
-                      // Show first page, last page, current page and pages around current page
-                      const showPage =
-                        pageNum === 1 ||
-                        pageNum === totalPages ||
-                        Math.abs(pageNum - currentPage) <= 1;
-
-                      if (!showPage && pageNum === 2 && currentPage > 4) {
-                        return (
-                          <span
-                            key="ellipsis1"
-                            className="px-2 text-muted-foreground"
-                          >
-                            ...
-                          </span>
-                        );
-                      }
-
-                      if (
-                        !showPage &&
-                        pageNum === totalPages - 1 &&
-                        currentPage < totalPages - 3
-                      ) {
-                        return (
-                          <span
-                            key="ellipsis2"
-                            className="px-2 text-muted-foreground"
-                          >
-                            ...
-                          </span>
-                        );
-                      }
-
-                      if (!showPage) return null;
-
-                      return (
-                        <Button
-                          key={pageNum}
-                          variant={
-                            pageNum === currentPage ? "default" : "outline"
-                          }
-                          size="sm"
-                          asChild
-                        >
-                          <Link href={generatePageUrl(pageNum)}>{pageNum}</Link>
-                        </Button>
-                      );
-                    }
+                    </Button>
                   )}
-                </div>
 
-                {/* Next Page Button */}
-                {currentPage < totalPages ? (
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={generatePageUrl(currentPage + 1)}>
+                  {/* Page Numbers */}
+                  <div className="flex items-center space-x-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (pageNum) => {
+                        const showPage =
+                          pageNum === 1 ||
+                          pageNum === totalPages ||
+                          Math.abs(pageNum - currentPage) <= 1;
+
+                        if (!showPage && pageNum === 2 && currentPage > 4) {
+                          return (
+                            <span
+                              key="ellipsis1"
+                              className="px-2 text-muted-foreground"
+                            >
+                              ...
+                            </span>
+                          );
+                        }
+
+                        if (
+                          !showPage &&
+                          pageNum === totalPages - 1 &&
+                          currentPage < totalPages - 3
+                        ) {
+                          return (
+                            <span
+                              key="ellipsis2"
+                              className="px-2 text-muted-foreground"
+                            >
+                              ...
+                            </span>
+                          );
+                        }
+
+                        if (!showPage) return null;
+
+                        return (
+                          <Button
+                            key={pageNum}
+                            variant={
+                              pageNum === currentPage ? "default" : "outline"
+                            }
+                            size="sm"
+                            asChild
+                          >
+                            <Link href={generatePageUrl(pageNum)}>
+                              {pageNum}
+                            </Link>
+                          </Button>
+                        );
+                      }
+                    )}
+                  </div>
+
+                  {/* Next Page */}
+                  {currentPage < totalPages ? (
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={generatePageUrl(currentPage + 1)}>
+                        Next
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" disabled>
                       Next
                       <ChevronRight className="w-4 h-4 ml-1" />
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button variant="outline" size="sm" disabled>
-                    Next
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
-                )}
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="py-12 text-center">
-            <p className="text-lg text-muted-foreground">
-              No posts found by this author yet.
-            </p>
-          </div>
-        )}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="py-12 text-center">
+              <p className="text-lg text-muted-foreground">
+                No posts found by this author yet.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

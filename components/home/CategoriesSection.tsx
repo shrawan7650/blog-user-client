@@ -38,6 +38,31 @@ export function CategoriesSection() {
       setScrollPosition(newPosition);
     }
   };
+  if (loading && categories.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Explore Categories</h2>
+        </div>
+
+        <div
+          id="categories-scroll"
+          className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide"
+        >
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="group flex-shrink-0 bg-card border rounded-lg p-1 min-w-[200px] h-12 animate-pulse"
+            >
+              <div className="flex items-center justify-center h-full">
+                <div className="w-24 h-3 bg-gray-300 rounded dark:bg-gray-700" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -63,26 +88,19 @@ export function CategoriesSection() {
         className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {loading
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 min-w-[200px] h-10 bg-muted animate-pulse rounded-lg"
-              />
-            ))
-          : categories.map((category: Category) => (
-              <Link
-                key={category.id}
-                href={`/category/${category.slug}`}
-                className="group flex-shrink-0 bg-card hover:bg-accent border rounded-lg p-1 min-w-[200px] transition-all duration-200 hover:shadow-md"
-              >
-                <div className="text-center">
-                  <h3 className="font-semibold transition-colors group-hover:text-primary">
-                    {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-                  </h3>
-                </div>
-              </Link>
-            ))}
+        {categories.map((category: Category) => (
+          <Link
+            key={category.id}
+            href={`/category/${category.slug}`}
+            className="group flex-shrink-0 bg-card hover:bg-accent border rounded-lg p-1 min-w-[200px] transition-all duration-200 hover:shadow-md"
+          >
+            <div className="text-center">
+              <h3 className="font-semibold transition-colors group-hover:text-primary">
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+              </h3>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

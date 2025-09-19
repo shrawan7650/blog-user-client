@@ -72,6 +72,7 @@ export function RelatedPosts({ category, currentSlug }: RelatedPostsProps) {
          createdAt={post.createdAt}
          author={post.author}
          readingTime={post.readingTime}
+          views={post.views} // Pass views prop
        />
         ))}
       </div>
