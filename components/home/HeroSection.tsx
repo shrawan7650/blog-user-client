@@ -82,7 +82,7 @@ export function HeroSection() {
 
   if (loading) {
     return (
-      <section className="py-12 bg-gradient-to-br dark:from-slate-900 dark:to-slate-800">
+      <section className="py-12 dark:from-slate-900 dark:to-slate-800">
         <div className="container px-4 mx-auto">
           {/* Desktop Layout */}
           <div className="hidden lg:flex lg:gap-6 lg:h-[600px]">
@@ -263,7 +263,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="py-2 bg-gradient-to-br dark:from-slate-900 dark:to-slate-800">
+    <section className="py-2 dark:from-slate-900 dark:to-slate-800">
       <div className="container px-4 mx-auto">
         {/* Desktop Layout: 30% - 40% - 30% */}
         <div className="hidden lg:flex lg:gap-6 lg:h-[600px]">

@@ -95,14 +95,13 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50  backdrop-blur-xl bg-muted/50 supports-[backdrop-filter]:bg-background/80 border-b border-border/40 shadow-sm">
+      <nav className="sticky top-0 z-50 shadow-sm backdrop-blur-xl border-border/40">
         <div className="container px-4 mx-auto lg:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group">
-         
               <span className="text-xl font-bold text-transparent bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-               Inspitech Blog
+                Inspitech Blog
               </span>
             </Link>
 
@@ -213,12 +212,7 @@ export function Navbar() {
             className="flex items-center space-x-3"
             onClick={() => setIsOpen(false)}
           >
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80">
-              <span className="text-lg font-bold text-primary-foreground">
-                T
-              </span>
-            </div>
-            <span className="text-xl font-bold">TechBlog</span>
+            <span className="text-xl font-bold"> Inspitech Blog</span>
             {/* //show simple ui time and day */}
           </Link>
 
@@ -283,7 +277,8 @@ export function Navbar() {
                         onClick={() => setIsOpen(false)}
                       >
                         <span className="text-sm font-medium">
-                        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                          {category.name.charAt(0).toUpperCase() +
+                            category.name.slice(1)}
                         </span>
                       </Link>
                     ))}

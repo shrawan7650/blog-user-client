@@ -11,7 +11,7 @@ export function BlogSidebar({ post }) {
   return (
     <div className="space-y-8">
       {/* Table of Contents - Add this as the first item */}
-      <TableOfContents post={post} />
+      {/* <TableOfContents post={post} /> */}
       
       {/* Sticky Ad */}
       {/* <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   Copy,
@@ -104,7 +104,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
           </React.Fragment>
         );
       }
-      
+
       case "paragraph":
         return (
           <React.Fragment key={block.id || index}>
@@ -117,57 +117,46 @@ export function BlogContent({ blocks }: BlogContentProps) {
             )}
           </React.Fragment>
         );
-      
-     
-        case "list":
-        let ListTag: any = "ul";
-        let listClass = "";
-
-        if (block.data.type === "ordered") {
-          ListTag = "ol";
-          listClass = "list-none list-inside space-y-4 mb-4 ml-4";
-        } else if (block.data.type === "unordered") {
-          ListTag = "ul";
-          listClass = "list-disc list-inside space-y-4 mb-4 ml-4";
-        } else if (block.data.type === "numbered") {
-          ListTag = "ol";
-          listClass = "list-none numbered space-y-4 mb-4 ml-4";
-        }
+      case "list":
+        const isOrdered =
+          block.data.type === "ordered" || block.data.type === "numbered";
+        const ListTag = isOrdered ? "ol" : "ul";
+        const listClass = isOrdered
+          ? "list-decimal list-inside space-y-3 mb-6 ml-6"
+          : "list-disc list-inside space-y-3 mb-6 ml-6";
 
         return (
-          <ListTag 
-            key={block.id || index}
-            style={{ marginLeft: "1.5rem" }} // Adjust left margin for better alignment
-          className={listClass}>
-            {block.data.items?.map(
-              (
-                item: { title: string; paragraphs: { text: string }[] },
-                index: number
-              ) => (
-                <li key={index} className="text-base leading-relaxed">
-                  {/* Title */}
+          <ListTag key={block.id || index} className={listClass}>
+            {block.data.items?.map((item) => (
+              <li key={item.id} className="text-base leading-relaxed">
+                <div className="inline">
+                  {/* Title and paragraphs in same flow */}
                   {item.title && (
-                    <div className="flex items-center gap-2">
-                      <span className="mb-1 font-semibold">{index + 1}.</span>
-
-                      <p className="mb-1 font-semibolds">{item.title}</p>
-                    </div>
+                    <span className="font-semibold text-black dark:text-white">
+                      {item.title}
+                      {item.paragraphs && item.paragraphs.length > 0
+                        ? ": "
+                        : ""}
+                    </span>
                   )}
 
-                  {/* Paragraphs */}
-                  {item.paragraphs?.map((para, pIndex) => (
-                    <p
-                      key={pIndex}
-                      className="mb-2"
-                      dangerouslySetInnerHTML={{ __html: para.text }}
-                    />
+                  {/* Paragraphs - render inline with title or as separate blocks */}
+                  {item.paragraphs?.map((para, paraIndex) => (
+                    <span
+                      key={para.id}
+                      className={`text-black dark:text-white ${
+                        item.title && paraIndex === 0 ? "inline" : "block mt-1"
+                      }`}
+                    >
+                      {para.text}
+                      {paraIndex < item.paragraphs.length - 1 && " "}
+                    </span>
                   ))}
-                </li>
-              )
-            )}
+                </div>
+              </li>
+            ))}
           </ListTag>
         );
-
       case "code":
         const blockId = `code-${block.id || index}`;
         return (
@@ -297,8 +286,13 @@ export function BlogContent({ blocks }: BlogContentProps) {
           <div key={block.id || index} className="mb-6 space-y-4">
             {block.data.items.map((faq: any, faqIndex: number) => {
               const isExpanded = expandedFAQs.has(faqIndex);
+
               return (
-                <div key={faqIndex} className="border rounded-lg border-border">
+                <div
+                  key={faqIndex}
+                  className="overflow-hidden border rounded-lg border-border"
+                >
+                  {/* Question Button */}
                   <button
                     className="flex items-center justify-between w-full p-4 text-left transition-colors hover:bg-muted/50"
                     onClick={() => toggleFAQ(faqIndex)}
@@ -312,14 +306,21 @@ export function BlogContent({ blocks }: BlogContentProps) {
                       <ChevronDown className="w-5 h-5 text-muted-foreground" />
                     )}
                   </button>
-                  {isExpanded && (
+
+                  {/* Smooth Expand/Collapse */}
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                      isExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
                     <div className="px-4 pb-4 text-muted-foreground">
                       {renderTextContent(faq.answer)}
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
+
             {shouldShowAd && (
               <AdSlot slot="content-ad" format="horizontal" className="my-8" />
             )}
@@ -379,6 +380,9 @@ export function BlogContent({ blocks }: BlogContentProps) {
             "bg-green-50 border-green-200 text-green-900 dark:bg-green-950 dark:border-green-800 dark:text-green-100",
         };
 
+        const title = block.data.title || block.data.text || "Callout Title";
+        const content = block.data.content || "";
+
         return (
           <div key={block.id || index} className="mb-6">
             <div
@@ -387,12 +391,8 @@ export function BlogContent({ blocks }: BlogContentProps) {
                 calloutStyles.info
               }`}
             >
-              {block.data.title && (
-                <h4 className="mb-2 font-semibold">
-                  {renderTextContent(block.data.title)}
-                </h4>
-              )}
-              <p>{renderTextContent(block.data.content)}</p>
+              <h4 className="mb-2 font-semibold">{renderTextContent(title)}</h4>
+              {content && <p>{renderTextContent(content)}</p>}
             </div>
             {shouldShowAd && (
               <AdSlot slot="content-ad" format="horizontal" className="my-8" />

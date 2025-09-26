@@ -29,13 +29,13 @@ const SOCIAL_LINKS = [
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/techblog",
+    href: "https://instagram.com/inspitech",
     icon: Instagram,
     color: "hover:text-pink-500",
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/company/techblog",
+    href: "https://linkedin.com/company/shrawan-kumar-rai",
     icon: Linkedin,
     color: "hover:text-blue-600",
   },
@@ -60,7 +60,7 @@ const CONTACT_INFO = [
   {
     icon: Phone,
     label: "Phone",
-    value: "+91 99057 37772",
+    value: "+91 9905737772",
     href: "tel:+919905737772",
   },
   {
@@ -72,10 +72,10 @@ const CONTACT_INFO = [
 ];
 
 const COMPANY_INFO = {
-  name: "TechBlog",
+  name: "InspiTech Blog",
   description:
     "Your go-to source for the latest technology trends, tutorials, and insights. Stay ahead in the digital world with expert-driven content.",
-  logo: "T",
+  logo: "",
   year: 2025,
 };
 
@@ -92,7 +92,7 @@ export function Footer() {
   const col2 = categories.slice(6);
 
   return (
-    <footer className="text-black border-t bg-muted/50">
+    <footer className="text-black border-t dark:text-white bg-muted/50">
       <div className="container px-4 py-8 mx-auto sm:px-6 lg:px-8 sm:py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -100,18 +100,14 @@ export function Footer() {
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-10 h-10 transition-transform bg-blue-600 rounded-lg hover:scale-105">
-                <span className="text-xl font-bold text-black">
-                  {COMPANY_INFO.logo}
-                </span>
-              </div>
+
               <span className="text-2xl font-bold sm:text-xl">
                 {COMPANY_INFO.name}
               </span>
             </div>
 
             {/* Description */}
-            <p className="max-w-md text-sm leading-relaxed text-black sm:text-base">
+            <p className="max-w-md text-sm leading-relaxed text-black dark:text-white sm:text-base">
               {COMPANY_INFO.description}
             </p>
 
@@ -125,7 +121,7 @@ export function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`text-black transition-all duration-200 ${social.color} hover:scale-110 p-2 rounded-full hover:bg-gray-800`}
+                    className={`text-black dark:text-white dark:text-white transition-all duration-200 ${social.color} hover:scale-110 p-2 rounded-full hover:bg-gray-800`}
                     aria-label={social.name}
                   >
                     <IconComponent className="w-5 h-5" />
@@ -137,7 +133,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700">
+            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700 dark:text-white">
               Quick Links
             </h3>
             <ul className="space-y-2">
@@ -145,7 +141,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="inline-block text-sm text-black transition-colors duration-200 transform hover:text-gray-600 hover:translate-x-1 sm:text-base"
+                    className="inline-block text-sm text-black transition-colors duration-200 transform dark:text-white hover:text-gray-600 hover:translate-x-1 sm:text-base"
                   >
                     {link.name}
                   </Link>
@@ -156,7 +152,7 @@ export function Footer() {
 
           {/* Categories */}
           <div className="space-y-4">
-            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700">
+            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700 dark:text-white">
               Categories
             </h3>
             {loading || categories.length == 0 ? (
@@ -175,7 +171,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700">
+            <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700 dark:text-white">
               Contact Info
             </h3>
             <div className="space-y-3">
@@ -194,7 +190,7 @@ export function Footer() {
                             ? "noopener noreferrer"
                             : undefined
                         }
-                        className="flex items-start space-x-3 text-black transition-colors duration-200 hover:text-gray-600"
+                        className="flex items-start space-x-3 text-black transition-colors duration-200 dark:text-white hover:text-gray-600"
                       >
                         <IconComponent className="w-5 h-5 mt-0.5 text-blue-400 shrink-0" />
                         <span className="text-sm leading-relaxed break-all sm:text-base sm:break-normal">
@@ -216,10 +212,10 @@ export function Footer() {
 
             {/* Business Hours - Additional Info */}
             <div className="pt-4 mt-4 border-t border-gray-800">
-              <h4 className="mb-2 text-sm font-medium text-black">
+              <h4 className="mb-2 text-sm font-medium text-black dark:text-white">
                 Business Hours
               </h4>
-              <p className="text-xs text-black">
+              <p className="text-xs text-black dark:text-white">
                 Monday - Friday: 9:00 AM - 6:00 PM IST
                 <br />
                 Weekend: Support via Email
@@ -233,7 +229,7 @@ export function Footer() {
         {/* Bottom Footer */}
         <div className="pt-6 mt-8 text-center border-gray-800">
           <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
-            <p className="text-sm text-black">
+            <p className="text-sm text-black dark:text-white">
               &copy; {COMPANY_INFO.year} {COMPANY_INFO.name}. All rights
               reserved.
             </p>
@@ -274,7 +270,7 @@ export default function FooterCategories({
             <li key={category.id}>
               <Link
                 href={`/category/${category.slug}`}
-                className="inline-block text-sm transition-all duration-200 hover:text-gray-600 sm:text-basetext-black hover:translate-x-1"
+                className="inline-block text-sm transition-all duration-200 hover:text-gray-600 sm:text-basetext-black dark:text-white hover:translate-x-1"
               >
                 {category.name}
               </Link>

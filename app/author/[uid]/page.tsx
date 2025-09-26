@@ -190,7 +190,7 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
     <>
       {/* Author Header */}
       <div className="p-6 mb-8 rounded-lg shadow-sm bg-muted/50">
-        <div className="flex flex-col items-start space-y-6 md:flex-row md:space-y-0 md:space-x-8 bg-muted/50">
+        <div className="flex flex-col items-start space-y-6 md:flex-row md:space-y-0 md:space-x-8 ">
           <div className="relative flex-shrink-0 w-32 h-32 overflow-hidden rounded-full">
             <Image
               src={

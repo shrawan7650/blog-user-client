@@ -28,8 +28,12 @@ const blogSlice = createSlice({
         state.likes[slug] = (state.likes[slug] || 0) + 1
       }
     },
+    setUserLike: (state, action: PayloadAction<{ slug: string; liked: boolean }>) => {
+      state.userLikes[action.payload.slug] = action.payload.liked
+    },
   },
 })
 
-export const { setLikes, toggleLike } = blogSlice.actions
+export const { setLikes, toggleLike, setUserLike } = blogSlice.actions
 export default blogSlice.reducer
+

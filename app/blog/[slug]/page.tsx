@@ -1,29 +1,31 @@
-import { notFound } from "next/navigation"
-import type { Metadata } from "next"
-import { BlogHeader } from "@/components/blog/BlogHeader"
-import { BlogContent } from "@/components/blog/BlogContent"
-import { BlogSidebar } from "@/components/blog/BlogSidebar"
-import { ShareButtons } from "@/components/blog/ShareButtons"
-import { RelatedPosts } from "@/components/blog/RelatedPosts"
-import { NavigationButtons } from "@/components/blog/NavigationButtons"
-import { TagsSection } from "@/components/blog/TagsSection"
-import { LikeButton } from "@/components/blog/LikeButton"
-import { postsService } from "@/services/postsService"
-import type { BlogPostWithAuthor } from "@/types/blog"
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { BlogHeader } from "@/components/blog/BlogHeader";
+import { BlogContent } from "@/components/blog/BlogContent";
+import { BlogSidebar } from "@/components/blog/BlogSidebar";
+import { ShareButtons } from "@/components/blog/ShareButtons";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { NavigationButtons } from "@/components/blog/NavigationButtons";
+import { TagsSection } from "@/components/blog/TagsSection";
+import { LikeButton } from "@/components/blog/LikeButton";
+import { postsService } from "@/services/postsService";
+import type { BlogPostWithAuthor } from "@/types/blog";
 interface BlogPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
-export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: BlogPageProps): Promise<Metadata> {
   try {
-    const post = await postsService.getPostBySlug(params.slug)
+    const post = await postsService.getPostBySlug(params.slug);
 
     if (!post) {
       return {
         title: "Post Not Found",
-      }
+      };
     }
 
     return {
@@ -52,31 +54,30 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
         description: post.excerpt,
         images: [post.featuredImage],
       },
-    }
+    };
   } catch (error) {
     return {
       title: "Post Not Found",
-    }
+    };
   }
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  let post: BlogPostWithAuthor | null = null
+  let post: BlogPostWithAuthor | null = null;
 
   try {
-    post = await postsService.getPostBySlug(params.slug)
+    post = await postsService.getPostBySlug(params.slug);
     // console.log("post", post)
-   
   } catch (error) {
-    console.error("Error fetching post:", error)
+    console.error("Error fetching post:", error);
   }
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
   // Increment view count
-  postsService.incrementViews(post.slug)
+  postsService.incrementViews(post.slug);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -99,43 +100,45 @@ export default async function BlogPage({ params }: BlogPageProps) {
       "@type": "WebPage",
       "@id": `https://techblog.com/blog/${post.slug}`,
     },
-  }
+  };
   // console.log("post",post)
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <article className="min-h-screen bg-muted/50">
-        <div className="container px-4 py-8 mx-auto">
-        {/* <pre>{JSON.stringify(post, null, 2)}</pre> */}
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+      <article className="min-h-screen mx-auto bg-muted/50">
+        <div className="container w-full px-4 py-8 mx-auto /">
+          <div className="gap-8 mx-auto">
             {/* Main Content */}
             <div className="lg:col-span-3">
               <BlogHeader post={post} />
-     {/* {console.log("post.category",post.category)} */}
-          
 
               <BlogContent blocks={post.content} />
 
-             <div className="flex items-center justify-between my-6 mb-2 border-t border-b">
+              <div className="flex items-center justify-between my-6 mb-2 border-t border-b">
                 <ShareButtons post={post} />
                 <LikeButton postSlug={post.slug} initialLikes={post.likes} />
-              </div> 
-              <TagsSection tags={post.tags} /> 
+              </div>
+              <TagsSection tags={post.tags} />
 
-              <NavigationButtons currentSlug={post.slug} category={post.category} />
+              <NavigationButtons
+                currentSlug={post.slug}
+                category={post.category}
+              />
 
-             <RelatedPosts category={post.category} currentSlug={post.slug} />
+              <RelatedPosts category={post.category} currentSlug={post.slug} />
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1">
+            {/* <div className="lg:col-span-1">
               <BlogSidebar post={post} />
-            </div>
+            </div> */}
           </div>
         </div>
       </article>
     </>
-  )
+  );
 }

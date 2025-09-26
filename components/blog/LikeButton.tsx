@@ -2,11 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { useAppSelector, useAppDispatch } from "@/store/hooks"
-import { toggleLike, setLikes } from "@/store/slices/blogSlice"
 import { postsService } from "@/services/postsService"
 import { ThumbsUp } from "lucide-react"
-// import { Thumb } from "@radix-ui/react-scroll-area"
 
 interface LikeButtonProps {
   postSlug: string
@@ -14,30 +11,32 @@ interface LikeButtonProps {
 }
 
 export function LikeButton({ postSlug, initialLikes }: LikeButtonProps) {
-  const dispatch = useAppDispatch()
-  const { likes, userLikes } = useAppSelector((state) => state.blog)
+  console.log("Rendering LikeButton with initialLikes:", initialLikes)
+  const [likes, setLikes] = useState(initialLikes)
+  const [isLiked, setIsLiked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const currentLikes = likes[postSlug] ?? initialLikes
-  const isLiked = userLikes[postSlug] ?? false
-
   useEffect(() => {
-    dispatch(setLikes({ slug: postSlug, count: initialLikes }))
-  }, [dispatch, postSlug, initialLikes])
+    setLikes(initialLikes)
+  }, [initialLikes])
 
   const handleLike = async () => {
     if (isLoading) return
 
     setIsLoading(true)
     try {
-      dispatch(toggleLike(postSlug))
-
-      // Update in Firestore
       const increment = isLiked ? -1 : 1
+
+      // Optimistic UI update
+      setLikes((prev) => prev + increment)
+      setIsLiked((prev) => !prev)
+
+      // Update Firestore
       await postsService.updateLikes(postSlug, increment)
     } catch (error) {
-      // Revert on error
-      dispatch(toggleLike(postSlug))
+      // Revert if error
+      setLikes((prev) => prev + (isLiked ? 1 : -1))
+      setIsLiked((prev) => !prev)
       console.error("Error updating likes:", error)
     } finally {
       setIsLoading(false)
@@ -53,7 +52,7 @@ export function LikeButton({ postSlug, initialLikes }: LikeButtonProps) {
       className="flex items-center mt-2 mb-2 space-x-2"
     >
       <ThumbsUp className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
-      <span>{currentLikes}</span>
+      <span>{likes}</span>
     </Button>
   )
 }

@@ -1,50 +1,48 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Grid3X3, List } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { postsService } from "@/services/postsService"
-import type { BlogPost } from "@/types/blog"
-import PostCard from "../blog/PostCard"
-import PostListItem from "../blog/PostListItem"
-
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Grid3X3, List } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { postsService } from "@/services/postsService";
+import type { BlogPost } from "@/types/blog";
+import PostCard from "../blog/PostCard";
+import PostListItem from "../blog/PostListItem";
 
 interface CategoryPostsProps {
-  categoryId: string
+  categoryId: string;
 }
 
 export function CategoryPosts({ categoryId }: CategoryPostsProps) {
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid") // 👈 new state
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid"); // 👈 new state
 
   useEffect(() => {
-    fetchPosts()
-  }, [categoryId, currentPage])
+    fetchPosts();
+  }, [categoryId, currentPage]);
 
   const fetchPosts = async () => {
     try {
-      setLoading(true)
-      const { posts: newPosts, totalPages: total } = await postsService.getPosts(
-        currentPage,
-        10,
-        categoryId
-      )
-      setPosts(newPosts)
-      setTotalPages(total)
+      setLoading(true);
+      const {
+        posts: newPosts,
+        totalPages: total,
+      } = await postsService.getPosts(currentPage, 10, categoryId);
+      setPosts(newPosts);
+      setTotalPages(total);
     } catch (error) {
-      console.error("Error fetching category posts:", error)
+      console.error("Error fetching category posts:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (loading && posts.length === 0) {
     return (
@@ -56,13 +54,13 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
           >
             {/* Image placeholder */}
             <div className="h-40 mb-4 bg-gray-200 rounded-md"></div>
-  
+
             {/* Title placeholder */}
             <div className="w-3/4 h-4 mb-2 bg-gray-200 rounded"></div>
-  
+
             {/* Subtitle placeholder */}
             <div className="w-1/2 h-3 mb-4 bg-gray-200 rounded"></div>
-  
+
             {/* Button / meta placeholder */}
             <div className="flex space-x-2">
               <div className="w-16 h-6 bg-gray-200 rounded"></div>
@@ -73,16 +71,17 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
       </div>
     );
   }
-  
 
   if (posts.length === 0) {
     return (
       <div className="py-12 text-center">
+        <h3 className="mb-2 text-2xl font-semibold">No Posts Yet</h3>
         <p className="text-lg text-muted-foreground">
-          No posts found in this category yet.
+          There are no posts available in this category at the moment. Stay
+          tuned – new content is coming soon!
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -117,25 +116,24 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
         </div>
       </div>
 
-
-{/* Posts Display */}
-{viewMode === "grid" ? (
-  // Responsive Grid Layout
-  <div className="grid grid-cols-2 gap-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 sm:gap-1 lg:gap-8">
-    {posts.map((post) => (
-      <div key={post.slug} className="flex">
-        <PostCard {...post} />
-      </div>
-    ))}
-  </div>
-) : (
-  // Full-Width List Layout
-  <div className="space-y-4 sm:space-y-6">
-    {posts.map((post) => (
-      <PostListItem key={post.slug} {...post} />
-    ))}
-  </div>
-)}
+      {/* Posts Display */}
+      {viewMode === "grid" ? (
+        // Responsive Grid Layout
+        <div className="grid grid-cols-2 gap-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 sm:gap-1 lg:gap-8">
+          {posts.map((post) => (
+            <div key={post.slug} className="flex">
+              <PostCard {...post} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Full-Width List Layout
+        <div className="space-y-4 sm:space-y-6">
+          {posts.map((post) => (
+            <PostListItem key={post.slug} {...post} />
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
@@ -151,7 +149,7 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
 
           <div className="flex items-center space-x-1">
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const page = i + 1
+              const page = i + 1;
               return (
                 <Button
                   key={page}
@@ -162,7 +160,7 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
                 >
                   {page}
                 </Button>
-              )
+              );
             })}
           </div>
 
@@ -177,5 +175,5 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
