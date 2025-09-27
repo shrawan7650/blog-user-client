@@ -110,7 +110,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
       />
 
       <article className="min-h-screen mx-auto bg-muted/50">
-        <div className="container w-full px-4 py-8 mx-auto /">
+        <div className="container md:w-[70%] px-4 py-8 mx-auto sm:px-6 lg:px-8">
           <div className="gap-8 mx-auto">
             {/* Main Content */}
             <div className="lg:col-span-3">

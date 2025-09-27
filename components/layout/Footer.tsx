@@ -151,7 +151,7 @@ export function Footer() {
           </div>
 
           {/* Categories */}
-          <div className="space-y-4">
+          <div className="w-full space-y-6 ">
             <h3 className="pb-2 text-lg font-semibold text-black border-b border-gray-700 dark:text-white">
               Categories
             </h3>
@@ -228,8 +228,8 @@ export function Footer() {
 
         {/* Bottom Footer */}
         <div className="pt-6 mt-8 text-center border-gray-800">
-          <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
-            <p className="text-sm text-black dark:text-white">
+          <div className="flex flex-col space-y-2 text-c sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+            <p className="text-sm text-center text-black dark:text-white">
               &copy; {COMPANY_INFO.year} {COMPANY_INFO.name}. All rights
               reserved.
             </p>
@@ -253,12 +253,12 @@ export default function FooterCategories({
 }: {
   categories: any[];
 }) {
-  const columns = chunkArray(categories, 6); // 6 items per column
+  const columns = chunkArray(categories, 8); // 6 items per column
   const columnCount = Math.min(columns.length, 4); // max 4 columns for readability
 
   return (
     <div
-      className={`grid gap-x-8 gap-y-4  
+      className={`grid gap-x-12 gap-y-4  
         grid-cols-3
         sm:grid-cols-2
         md:grid-cols-${Math.min(columnCount, 3)}

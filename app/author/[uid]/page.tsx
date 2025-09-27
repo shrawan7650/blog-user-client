@@ -11,6 +11,7 @@ import {
   Globe,
   ChevronLeft,
   ChevronRight,
+  Instagram,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -271,6 +272,19 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
                     >
                       <Globe className="w-4 h-4 mr-1" />
                       Website
+                    </a>
+                  </Button>
+                )}
+                 {author.socialLinks.instagram && (
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={author.socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <Instagram className="w-4 h-4 mr-1" />
+                      Instagram
                     </a>
                   </Button>
                 )}
