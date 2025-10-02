@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         <p>Thank you for subscribing to our newsletter. You’ll now receive the latest AI, tech, and blog insights directly in your inbox weekly!</p>
         <p>Stay tuned for tutorials, guides, and updates from Inspitech.</p>
         <div style="margin:20px 0; text-align:center;">
-          <a href=" https://blog-user-client.vercel.app/blog/" target="_blank" rel="noopener noreferrer"
+          <a href=" https://blog-user-client.vercel.app" target="_blank" rel="noopener noreferrer"
              style="background:#6366f1; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:bold;">
             Visit Inspitech
           </a>
