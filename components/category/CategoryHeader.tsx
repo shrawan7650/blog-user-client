@@ -6,6 +6,7 @@ interface CategoryHeaderProps {
 
 export function CategoryHeader({ category }: CategoryHeaderProps) {
   console.log("CategoryHeader", category);
+
   return (
     <div className="py-10 text-center sm:py-14">
       {/* Title */}
@@ -14,11 +15,11 @@ export function CategoryHeader({ category }: CategoryHeaderProps) {
       </h1>
 
       {/* Description */}
-      <p className="max-w-2xl px-6 mx-auto text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl">
-        {category.description && (
-          <span className="block mb-2">{category.description}</span>
-        )}
-      </p>
+      {category.description && (
+        <p className="max-w-2xl px-6 mx-auto text-base leading-relaxed text-gray-600 dark:text-gray-300 sm:text-lg md:text-xl">
+          {category.description}
+        </p>
+      )}
     </div>
   );
 }

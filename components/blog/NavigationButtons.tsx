@@ -31,7 +31,8 @@ export function NavigationButtons({ currentSlug, category }: NavigationButtonsPr
       setPrevPost(currentIndex > 0 ? posts[currentIndex - 1] : null)
       setNextPost(currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null)
     } catch (error) {
-      console.error("Error fetching navigation posts:", error)
+      
+  
     } finally {
       setLoading(false)
     }

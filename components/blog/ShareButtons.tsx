@@ -53,7 +53,7 @@ export function ShareButtons({ post }: ShareButtonsProps) {
           url,
         })
       } catch (err) {
-        console.error("Native share cancelled or failed:", err)
+        logErr("Native share cancelled or failed", err)
       }
     } else {
       copyToClipboard()

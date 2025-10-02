@@ -1,22 +1,23 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { Providers } from "@/components/providers/Providers"
-import { Navbar } from "@/components/layout/Navbar"
-import { Footer } from "@/components/layout/Footer"
-import { CookieConsent } from "@/components/ui/CookieConsent"
-import { SearchModal } from "@/components/ui/SearchModal"
-import { PerformanceDebugger } from "@/components/performance/PerformanceMonitor"
-import Script from "next/script"
-import { Suspense } from "react"
-import CategoriesNav from "@/components/category/CategoriesNav"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Providers } from "@/components/providers/Providers";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { CookieConsent } from "@/components/ui/CookieConsent";
+import { SearchModal } from "@/components/ui/SearchModal";
+import { PerformanceDebugger } from "@/components/performance/PerformanceMonitor";
+import Script from "next/script";
+import { Suspense } from "react";
+import CategoriesNav from "@/components/category/CategoriesNav";
+import OfferBanner from "@/components/layout/Offer";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap", // Optimize font loading
   preload: true,
-})
+});
 
 // app/layout.tsx
 export const metadata: Metadata = {
@@ -62,21 +63,23 @@ export const metadata: Metadata = {
     },
   },
   generator: "v0.dev",
-}
-
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
 
         {/* DNS prefetch for Firebase */}
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
@@ -90,16 +93,31 @@ export default function RootLayout({
               strategy="afterInteractive"
             />
             {/* Preload critical resources */}
-            <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+            <link
+              rel="preload"
+              href="/fonts/inter.woff2"
+              as="font"
+              type="font/woff2"
+              crossOrigin="anonymous"
+            />
           </>
         )}
       </head>
-      <body suppressHydrationWarning className={`${inter.className} antialiased`}>
+      <body
+        suppressHydrationWarning
+        className={`${inter.className} antialiased`}
+      >
         <Providers>
           <Suspense fallback={null}>
             <div className="min-h-screen bg-muted/50 text-foreground">
+              <OfferBanner
+                offerActive={false} 
+                message="🎉 Special Offer: Get 20% off our premium courses!"
+                link="/offers"
+                linkText="Claim Now"
+              />
               <Navbar />
-              <CategoriesNav/>
+              <CategoriesNav />
               <main className="flex-1">{children}</main>
               <Footer />
               <SearchModal />
@@ -110,5 +128,5 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  )
+  );
 }

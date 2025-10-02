@@ -68,7 +68,6 @@ export function BlogContent({ blocks }: BlogContentProps) {
       return <span key={itemIndex}>{renderTextContent(item)}</span>;
     });
   };
-  console.log("blocks", blocks);
 
   const renderBlock = (block: BlogContentBlock, index: number) => {
     if (!block || typeof block !== "object") {
