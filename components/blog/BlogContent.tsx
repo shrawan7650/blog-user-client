@@ -9,12 +9,14 @@ import {
   ChevronUp,
   ExternalLink,
   X,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdSlot } from "@/components/ads/AdSlot";
 import type { BlogContentBlock } from "@/types/blog";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Card, CardContent } from "../ui/card";
 
 interface BlogContentProps {
   blocks: BlogContentBlock[];
@@ -156,6 +158,71 @@ export function BlogContent({ blocks }: BlogContentProps) {
             ))}
           </ListTag>
         );
+
+      case "CTA":
+        const {
+          title:titles,
+          description,
+          buttonText,
+          buttonUrl,
+          buttonVariant = "default",
+          buttonWidth,
+          buttonHeight,
+          buttonColor = "#2563eb",
+        } = block.data;
+
+        return (
+          <Card className="my-6">
+            <CardContent className="p-6 text-center">
+              {/* CTA Title */}
+              {titles && (
+                <h3 className="mb-4 text-2xl font-bold md:text-3xl">
+                  {titles}
+                </h3>
+              )}
+
+              {/* CTA Description */}
+              {description && (
+                <p className="max-w-xl mx-auto mb-6 text-muted-foreground">
+                  {description}
+                </p>
+              )}
+
+              {/* CTA Button */}
+              {buttonText && buttonUrl && (
+                <a
+                  href={buttonUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold transition-colors ${
+                    buttonVariant === "outline"
+                      ? "border hover:bg-opacity-10"
+                      : "text-white"
+                  }`}
+                  style={{
+                    width: buttonWidth ? `${buttonWidth}px` : "auto",
+                    height: buttonHeight ? `${buttonHeight}px` : "auto",
+                    backgroundColor:
+                      buttonVariant === "default"
+                        ? buttonColor
+                        : buttonVariant === "secondary"
+                        ? "#4ade80" // Tailwind green-400 fallback
+                        : buttonVariant === "destructive"
+                        ? "#ef4444"
+                        : "transparent",
+                    borderColor:
+                      buttonVariant === "outline" ? buttonColor : undefined,
+                    color: buttonVariant === "outline" ? buttonColor : "white",
+                  }}
+                >
+                  {buttonText}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </a>
+              )}
+            </CardContent>
+          </Card>
+        );
+
       case "code":
         const blockId = `code-${block.id || index}`;
         return (

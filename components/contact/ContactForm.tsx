@@ -1,54 +1,87 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { contactService } from "@/services/contactService"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { contactService } from "@/services/contactService";
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
+    type: "contact",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      await contactService.submitContact(formData.name, formData.email, formData.message)
-      setStatus("success")
-      setFormData({ name: "", email: "", message: "" })
-    } catch (error) {
-      setStatus("error")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+      // Save to your DB/service (optional)
+      await contactService.submitContact(
+        formData.name,
+        formData.email,
+        formData.message
+      );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // Call API route
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          type: formData.type, // "contact" or "newsletter"
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.error || "Email send failed");
+
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "", type: "contact" }); // reset
+    } catch (error) {
+      setStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   if (status === "success") {
     return (
       <div className="p-6 text-center border border-green-200 rounded-lg bg-green-50 h-fit">
-        <div className="mb-2 text-lg font-medium text-green-600">✅ Message Sent Successfully!</div>
-        <p className="text-green-700">Thank you for your message. We'll get back to you soon.</p>
-        <Button variant="outline" onClick={() => setStatus("idle")} className="mt-4">
+        <div className="mb-2 text-lg font-medium text-green-600">
+          ✅ Message Sent Successfully!
+        </div>
+        <p className="text-green-700">
+          Thank you for your message. We'll get back to you soon.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => setStatus("idle")}
+          className="mt-4"
+        >
           Send Another Message
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -108,5 +141,5 @@ export function ContactForm() {
         {isSubmitting ? "Sending..." : "Send Message"}
       </Button>
     </form>
-  )
+  );
 }

@@ -9,6 +9,7 @@ import { newsletterService } from "@/services/newsletterService";
 export default function NewsletterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [type] = useState("newsletter");
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle");
 
@@ -30,7 +31,7 @@ export default function NewsletterForm() {
       const res = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ name, email , type }),
       });
       const data = await res.json();
 
