@@ -27,7 +27,7 @@ export function RelatedPosts({ category, currentSlug }: RelatedPostsProps) {
       const relatedPosts = allPosts.filter((post:any) => post.slug !== currentSlug).slice(0, 3)
       setPosts(relatedPosts)
     } catch (error) {
-      console.error("Error fetching related posts:", error)
+      // console.error("Error fetching related posts:", error)
     } finally {
       setLoading(false)
     }

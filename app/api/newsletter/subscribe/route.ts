@@ -22,7 +22,15 @@ export async function POST(req: Request) {
       },
     });
 
-    const currentDate = new Date().toLocaleString();
+    const currentDate = new Date().toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata'
+      });
 
     // 1️⃣ Email to site owner (you)
     const ownerTemplate = `
@@ -70,7 +78,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, message: "Subscribed successfully!" });
   } catch (err) {
-    console.error("Newsletter subscription error:", err);
+    // console.error("Newsletter subscription error:", err);
     return NextResponse.json(
       { success: false, error: "Failed to subscribe. Try again later." },
       { status: 500 }

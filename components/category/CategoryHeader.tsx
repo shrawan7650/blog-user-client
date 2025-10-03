@@ -5,7 +5,7 @@ interface CategoryHeaderProps {
 }
 
 export function CategoryHeader({ category }: CategoryHeaderProps) {
-  console.log("CategoryHeader", category);
+  // console.log("CategoryHeader", category);
 
   return (
     <div className="py-10 text-center sm:py-14">

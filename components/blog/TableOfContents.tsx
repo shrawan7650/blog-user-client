@@ -32,7 +32,7 @@ export function TableOfContents({ post }) {
     let wordCount = 0;
   
     sectionContent.forEach(item => {
-      console.log("item", JSON.stringify(item, null, 2));
+      // console.log("item", JSON.stringify(item, null, 2));
   
       if (item.type === 'paragraph' && item.data?.text) {
         // count words in a simple paragraph

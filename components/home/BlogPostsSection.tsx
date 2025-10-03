@@ -51,7 +51,7 @@ export function BlogPostsSection() {
       setTotalPages(total);
   
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      // console.error("Error fetching posts:", error);
     } 
   }, [currentPage, selectedCategory, dispatch]);
   

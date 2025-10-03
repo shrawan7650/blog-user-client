@@ -69,7 +69,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
     post = await postsService.getPostBySlug(params.slug);
     // console.log("post", post)
   } catch (error) {
-    console.error("Error fetching post:", error);
+    // console.error("Error fetching post:", error);
   }
 
   if (!post) {

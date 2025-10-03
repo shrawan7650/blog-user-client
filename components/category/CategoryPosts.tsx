@@ -33,7 +33,7 @@ export function CategoryPosts({ categoryId }: CategoryPostsProps) {
       setPosts(newPosts);
       setTotalPages(total);
     } catch (error) {
-      console.error("Error fetching category posts:", error);
+      // console.error("Error fetching category posts:", error);
     } finally {
       setLoading(false);
     }

@@ -43,7 +43,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   try {
     category = await categoriesService.getCategoryBySlug(params.slug)
   } catch (error) {
-    console.error("Error fetching category:", error)
+    // console.error("Error fetching category:", error)
   }
 
   if (!category) {

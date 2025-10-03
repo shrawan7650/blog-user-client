@@ -23,7 +23,7 @@ export function HeroSection() {
         );
         setFeaturedPosts(sortedPosts);
       } catch (error) {
-        console.error("Error fetching featured posts:", error);
+        // console.error("Error fetching featured posts:", error);
       } finally {
         setLoading(false);
       }

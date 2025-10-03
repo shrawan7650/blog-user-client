@@ -61,7 +61,7 @@ export const usersService = {
 
       return user
     } catch (error) {
-      console.error("Error fetching user:", error)
+      // console.error("Error fetching user:", error)
       return null
     }
   },
@@ -93,7 +93,7 @@ export const usersService = {
 
         await Promise.all(fetchPromises)
       } catch (error) {
-        console.error("Error fetching multiple users:", error)
+        // console.error("Error fetching multiple users:", error)
       }
     }
 
@@ -132,7 +132,7 @@ export const usersService = {
 
       return topAuthors
     } catch (error) {
-      console.error("Error fetching top authors:", error)
+      // console.error("Error fetching top authors:", error)
       return []
     }
   },

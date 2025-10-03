@@ -164,7 +164,7 @@ export const postsService = {
         setCache(cacheKey, result)
         return result
       } catch (error) {
-        console.error("Error fetching posts:", error)
+        // console.error("Error fetching posts:", error)
         throw error
       }
     })
@@ -217,7 +217,7 @@ export const postsService = {
           setCache(cacheKey, serializedPost, LONG_CACHE_TTL) // Cache posts longer
           return serializedPost
       } catch (error) {
-        console.error("Error fetching post:", error)
+        // console.error("Error fetching post:", error)
         throw error
       }
     })
@@ -253,7 +253,7 @@ export const postsService = {
         setCache(cacheKey, postsWithAuthors, LONG_CACHE_TTL)
         return postsWithAuthors
       } catch (error) {
-        console.error("Error fetching featured posts:", error)
+        // console.error("Error fetching featured posts:", error)
         throw error
       }
     })
@@ -297,7 +297,7 @@ export const postsService = {
         setCache(cacheKey, result)
         return result
       } catch (error) {
-        console.error("Error fetching trending posts:", error)
+        // console.error("Error fetching trending posts:", error)
         throw error
       }
     })
@@ -331,7 +331,7 @@ export const postsService = {
         setCache(cacheKey, postsWithAuthors, LONG_CACHE_TTL)
         return postsWithAuthors
       } catch (error) {
-        console.error("Error fetching popular posts:", error)
+        // console.error("Error fetching popular posts:", error)
         throw error
       }
     })
@@ -371,7 +371,7 @@ export const postsService = {
         setCache(cacheKey, postsWithAuthors, 2 * 60 * 1000) // Cache searches for 2 minutes
         return postsWithAuthors
       } catch (error) {
-        console.error("Error searching posts:", error)
+        // console.error("Error searching posts:", error)
         throw error
       }
     })
@@ -424,7 +424,7 @@ export const postsService = {
         setCache(cacheKey, result)
         return result
       } catch (error) {
-        console.error("Error fetching posts by author:", error)
+        // console.error("Error fetching posts by author:", error)
         throw error
       }
     })
@@ -459,7 +459,7 @@ export const postsService = {
       clearCacheByPattern("popular_posts")
     }
     } catch (error) {
-      console.error("Error incrementing views:", error)
+      // console.error("Error incrementing views:", error)
     }
   },
 
@@ -478,7 +478,7 @@ export const postsService = {
       cache.delete(getCacheKey("post", { slug }))
     }
     } catch (error) {
-      console.error("Error updating likes:", error)
+      // console.error("Error updating likes:", error)
       throw error
     }
   },

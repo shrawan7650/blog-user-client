@@ -40,7 +40,7 @@ export default function NewsletterForm() {
       setName("");
       setEmail("");
     } catch (error) {
-      console.error("Subscription error:", error);
+      // console.error("Subscription error:", error);
       setSubscriptionStatus("error");
     } finally {
       setIsSubscribing(false);

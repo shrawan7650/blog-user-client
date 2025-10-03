@@ -30,9 +30,9 @@ export class PerformanceMonitor {
       }
 
       // Log slow operations in development
-      if (process.env.NODE_ENV === "development" && duration > 1000) {
-        console.warn(`Slow operation detected: ${label} took ${duration.toFixed(2)}ms`)
-      }
+      // if (process.env.NODE_ENV === "development" && duration > 1000) {
+      //   console.warn(`Slow operation detected: ${label} took ${duration.toFixed(2)}ms`)
+      // }
     }
   }
 
@@ -134,7 +134,7 @@ export const analyzeBundleSize = () => {
   })
 
 
-  console.groupEnd()
+  // console.groupEnd()
 }
 
 // Memory usage monitoring

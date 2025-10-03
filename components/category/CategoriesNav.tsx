@@ -10,7 +10,7 @@ const CategoriesNav = () => {
   );
 
   const pathname = usePathname();
-  console.log("pathname", pathname);
+  // console.log("pathname", pathname);
 
   const hiddenRoutes = [
     "/about",

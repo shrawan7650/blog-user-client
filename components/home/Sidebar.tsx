@@ -28,7 +28,7 @@ export function Sidebar() {
       const posts = await postsService.getPopularPosts(5);
       setPopularPosts(posts);
     } catch (error) {
-      console.error("Error fetching popular posts:", error);
+      // console.error("Error fetching popular posts:", error);
     }
   };
 

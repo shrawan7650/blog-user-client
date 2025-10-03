@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "TechBlog - Latest Tech News & Tutorials",
+  title: "Inspitech Blog - Latest Tech News & Tutorials",
   description:
     "Stay updated with the latest technology trends, tutorials, and insights from industry experts.",
 };

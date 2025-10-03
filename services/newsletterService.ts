@@ -22,7 +22,7 @@ export const newsletterService = {
         subscribedAt: serverTimestamp(),
       })
     } catch (error) {
-      console.error("Error subscribing to newsletter:", error)
+      // console.error("Error subscribing to newsletter:", error)
       throw error
     }
   },

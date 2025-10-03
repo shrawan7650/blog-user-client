@@ -11,7 +11,7 @@ interface LikeButtonProps {
 }
 
 export function LikeButton({ postSlug, initialLikes }: LikeButtonProps) {
-  console.log("Rendering LikeButton with initialLikes:", initialLikes)
+  // console.log("Rendering LikeButton with initialLikes:", initialLikes)
   const [likes, setLikes] = useState(initialLikes)
   const [isLiked, setIsLiked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +37,7 @@ export function LikeButton({ postSlug, initialLikes }: LikeButtonProps) {
       // Revert if error
       setLikes((prev) => prev + (isLiked ? 1 : -1))
       setIsLiked((prev) => !prev)
-      console.error("Error updating likes:", error)
+      // console.error("Error updating likes:", error)
     } finally {
       setIsLoading(false)
     }

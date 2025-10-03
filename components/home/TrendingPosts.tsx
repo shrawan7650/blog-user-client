@@ -38,7 +38,7 @@ export function TrendingPosts() {
         setTotalPages(result.hasMore ? currentPage + 1 : currentPage)
       }
     } catch (error) {
-      console.error("Error fetching trending posts:", error)
+      // console.error("Error fetching trending posts:", error)
     } finally {
       setLoading(false)
     }

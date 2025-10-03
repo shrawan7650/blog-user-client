@@ -173,7 +173,7 @@ async function AuthorContent({ params, searchParams }: AuthorPageProps) {
       totalPages = result.totalPages;
     }
   } catch (error) {
-    console.error("Error fetching author or posts:", error);
+    // console.error("Error fetching author or posts:", error);
     notFound();
   }
 

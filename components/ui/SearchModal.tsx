@@ -58,7 +58,7 @@ export function SearchModal() {
       const posts = await postsService.searchPosts(searchQuery)
       setResults(posts)
     } catch (error) {
-      console.error("Error searching posts:", error)
+      // console.error("Error searching posts:", error)
       setResults([])
     } finally {
       setLoading(false)

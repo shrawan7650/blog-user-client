@@ -11,7 +11,7 @@ export const contactService = {
         submittedAt: serverTimestamp(),
       })
     } catch (error) {
-      console.error("Error submitting contact form:", error)
+      // console.error("Error submitting contact form:", error)
       throw error
     }
   },
