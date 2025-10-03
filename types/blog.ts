@@ -44,6 +44,7 @@ export interface BlogContentBlock {
     | "paragraph"
     | "list"
     | "code"
+    | "CTA"
     | "image"
     | "gallery"
     | "table"

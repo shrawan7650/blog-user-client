@@ -161,7 +161,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
 
       case "CTA":
         const {
-          title:titles,
+          title: titles,
           description,
           buttonText,
           buttonUrl,
@@ -485,6 +485,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
 
       case "embed":
         const getEmbedContent = () => {
+          // 🎥 YouTube
           if (
             block.data.url.includes("youtube.com") ||
             block.data.url.includes("youtu.be")
@@ -503,6 +504,59 @@ export function BlogContent({ blocks }: BlogContentProps) {
             );
           }
 
+          // 🎵 Spotify
+          if (block.data.url.includes("spotify.com")) {
+            return (
+              <iframe
+                src={`https://open.spotify.com/embed/${
+                  block.data.url.split("spotify.com/")[1]
+                }`}
+                className="w-full rounded-lg"
+                height="152"
+                allow="encrypted-media"
+                title="Spotify player"
+              />
+            );
+          }
+
+          // 🎶 SoundCloud
+          if (block.data.url.includes("soundcloud.com")) {
+            return (
+              <iframe
+                width="100%"
+                height="166"
+                scrolling="no"
+                frameBorder="no"
+                allow="autoplay"
+                src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+                  block.data.url
+                )}&color=%23ff5500`}
+                className="rounded-lg"
+                title="SoundCloud track"
+              />
+            );
+          }
+
+          // 🖼️ Instagram
+          if (block.data.url.includes("instagram.com")) {
+            return (
+              <div className="p-4 text-center border rounded-lg bg-card">
+                <p className="mb-4 text-muted-foreground">Instagram Post</p>
+                <Button asChild variant="outline">
+                  <a
+                    href={block.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View on Instagram
+                    <ExternalLink className="w-4 h-4 ml-2" />
+                  </a>
+                </Button>
+              </div>
+            );
+          }
+
+          // 🐦 Twitter/X
           if (
             block.data.url.includes("twitter.com") ||
             block.data.url.includes("x.com")
@@ -524,6 +578,7 @@ export function BlogContent({ blocks }: BlogContentProps) {
             );
           }
 
+          // 🌍 Default external
           return (
             <div className="p-4 text-center border rounded-lg bg-card">
               <p className="mb-4 text-muted-foreground">External Content</p>
